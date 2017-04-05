@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <legend class="text-center">Log in</legend>
+    <form class="form-horizontal" name="authenticate" action="{{ path('security_login') }}" method="post">
+        <fieldset>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="_username">Username</label>
+                <div class="col-md-4">
+                    <input name="_username" type="text" placeholder="username" class="form-control input-md" value="nakov">
+                </div>
+            </div>
+
+            <!-- Password input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="_password">Password</label>
+                <div class="col-md-4">
+                    <input name="_password" type="password" placeholder="password" class="form-control input-md" value="123">
+                </div>
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="submit"></label>
+                <div class="col-md-4">
+                    <input type="submit" class="btn btn-success" value="submit">
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+{% endblock %}
