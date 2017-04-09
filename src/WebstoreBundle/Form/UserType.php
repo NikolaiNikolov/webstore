@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use WebstoreBundle\Entity\User;
 
 class UserType extends AbstractType
 {
@@ -14,12 +15,14 @@ class UserType extends AbstractType
     {
         $builder
             ->add("username", TextType::class)
-            ->add("password", RepeatedType::class);
+            ->add("password", RepeatedType::class)
+            ->add("firstName", TextType::class)
+            ->add("lastName", TextType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-
+        $resolver->setDefaults(['data-class' => User::class]);
     }
 
     public function getName()

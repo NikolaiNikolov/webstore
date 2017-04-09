@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * User
  *
- * @ORM\Table(name="user")
+ * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="WebstoreBundle\Repository\UserRepository")
  */
 class User implements UserInterface
@@ -39,16 +39,16 @@ class User implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="firstName", type="string", length=255)
+     * @ORM\Column(name="firstName", type="string", length=255, options={"default" : 0})
      */
-    private $firstName = '';
+    private $firstName;
 
     /**
      * @var string
      *
      * @ORM\Column(name="lastName", type="string", length=255)
      */
-    private $lastName = '';
+    private $lastName;
 
 
     /**
@@ -200,7 +200,6 @@ class User implements UserInterface
     {
         // TODO: Implement eraseCredentials() method.
     }
-
 
 }
 

@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use WebstoreBundle\Entity\User;
 use WebstoreBundle\Form\UserType;
 
+
 class UserController extends Controller
 {
 
@@ -23,8 +24,7 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isValid()) {
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPassword());
 
@@ -42,10 +42,14 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("user/view/{name}", name="user_profile")
+     * @Route("users/all", name="all_users")
      */
-    public function profileAction()
+    public function allUsersAction()
     {
+        $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findAll();
 
+        return $this->render("user/all.html.twig", ['users' => $users]);
     }
+
+
 }
