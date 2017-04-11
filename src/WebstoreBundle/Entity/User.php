@@ -2,8 +2,10 @@
 
 namespace WebstoreBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
@@ -24,7 +26,7 @@ class User implements UserInterface
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="username", type="string", length=50, unique=true)
      */
     private $username;
@@ -38,17 +40,68 @@ class User implements UserInterface
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="firstName", type="string", length=255, options={"default" : 0})
      */
     private $firstName;
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="lastName", type="string", length=255)
      */
     private $lastName;
+
+    /**
+     * @return float
+     */
+    public function getBalance(): float
+    {
+        return $this->balance;
+    }
+
+    /**
+     * @param float $balance
+     */
+    public function setBalance(float $balance)
+    {
+        $this->balance = $balance;
+    }
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="balance", type="decimal", precision=10, scale=2)
+     */
+    private $balance = 0.00;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="WebstoreBundle\Entity\Product", mappedBy="owner")
+     */
+    private $products;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getProducts(): ArrayCollection
+    {
+        return $this->products;
+    }
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="WebstoreBundle\Entity\Role", inversedBy="users")
+     * @ORM\JoinTable(name="users_roles",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     *     )
+     */
+    private $roles;
+
+
 
 
     /**
@@ -175,7 +228,20 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        return [];
+        return array_map(function (Role $role){return $role->getName();}, $this->roles->toArray());
+    }
+
+
+    /**
+     * @param Role $role
+     *
+     * @return User
+     */
+    public function addRole(Role $role)
+    {
+        $this->roles[] = $role;
+
+        return $this;
     }
 
     /**
@@ -201,5 +267,10 @@ class User implements UserInterface
         // TODO: Implement eraseCredentials() method.
     }
 
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+        $this->roles = new ArrayCollection();
+    }
 }
 

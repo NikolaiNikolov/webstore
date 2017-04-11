@@ -5,71 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>{% block title %}Shop{% endblock %}</title>
     {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/bootstrap-theme.min.css') }}">
+        <script src="{{ asset('js/jquery-3.2.0.min.js') }}"></script>
+
     {% endblock %}
     {#<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>#}
 </head>
 {% block header %}
     <header>
-        <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
-            <a class="navbar-brand" href="#">
-                <img src="http://www.jbvirtuals.com/images/ecommerce.png" width="30" height="30" alt="">
-            </a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
 
+                    <a class="navbar-brand" href="#">
+                    <img src="http://www.jbvirtuals.com/images/ecommerce.png" width="30" height="30" alt="">
+                    </a>
 
-            <a class="navbar-brand" href="{{ path('shop_index') }}">Webstore</a>
+                    <a class="navbar-brand" href="{{ path('shop_index') }}">Shop</a>
+                </div>
 
-            <div class="navbar-collapse collapse" id="navbarNavDropdown">
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        {#<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>#}
+                        <li><a href="{{ path('all_users') }}">All users</a></li>
+                        <li><a href="{{ path('products_all') }}">All products</a></li>
+                        <li><a href="{{ path('products_add') }}">Add product</a></li>
+                    </ul>
 
-                <ul class="nav navbar-nav navbar-left">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{{ path('shop_index') }}">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('all_users') }}">All users</a>
-                    </li>
-                    {#<li class="nav-item dropdown">#}
-                        {#<a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-                            {#Dropdown link#}
-                        {#</a>#}
-                        {#<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">#}
-                            {#<a class="dropdown-item" href="#">Action</a>#}
-                            {#<a class="dropdown-item" href="#">Another action</a>#}
-                            {#<a class="dropdown-item" href="#">Something else here</a>#}
-                        {#</div>#}
-                    {#</li>#}
-                </ul>
-
-            </div>
-
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    {% if app.user %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Welcome, <strong>{{ app.user.username }}</strong><img class="user-pic" src="{{ asset('images/users/profile-pics/default.jpg') }}" alt="pic"></a>
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if app.user %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>{{ app.user.username }}</strong><img class="user-pic" src="http://newtrend.bg/wp-content/uploads/2012/12/svetlin_nakov-e1355764014661.jpg" alt="pic"><span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Profile</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ path('security_logout') }}">Log out</a></li>
+                            </ul>
                         </li>
+                        {% else %}
+                                {#<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>#}
+                                <li><a href="{{ path('security_login') }}">Log In</a></li>
+                                <li><a href="{{ path('user_register') }}">Register</a></li>
+                        {% endif %}
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><strong>Cart</strong> <img class="user-pic" src="{{ asset('images/icons/cart.png') }}" alt="pic"> (0 items)</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('security_logout') }}">Log out</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('security_login') }}">Log in</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('user_register') }}">Register</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
         </nav>
 
     </header>
@@ -92,7 +83,7 @@
 {% block footer %}
     <footer>
         <div class="container modal-footer">
-            <p>&copy; 2016 - Software University Foundation</p>
+            <p>&copy; 2017 - WebStore</p>
         </div>
     </footer>
 {% endblock %}
@@ -100,12 +91,9 @@
 </body>
 
 {% block javascripts %}
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/scripts.js') }}"></script>
-    {#<script src="{{ asset('js/bootstrap.min.js') }}"></script>#}
     <script src="{{ asset('js/npm.js') }}"></script>
-    <script src="{{ asset('js/jquery-3.2.0.min.js') }}"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
-    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>#}
 {% endblock %}
 </html>
 

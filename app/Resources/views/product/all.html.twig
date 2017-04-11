@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+            <!--for demo wrap-->
+            <h1>Products</h1>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Owner</th>
+                        <th>In stock</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td><a target="_blank" href="{{ path('product_view', {'id': product.id}) }}">{{ product.name }}</a></td>
+                            <td>{{ product.description|slice(0, 20) }}</td>
+                            <td>{{ product.price }} $</td>
+                            <td>{{ product.quantity }}</td>
+                            <td>{{ product.owner.username }}</td>
+                            <td>{{ product.inStock ? "yes" : "no" }}</td>
+                            <td>{{ product.addedOn|date('d-m-y h:m:s') }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+    </div>
+
+
+
+{% endblock %}
+

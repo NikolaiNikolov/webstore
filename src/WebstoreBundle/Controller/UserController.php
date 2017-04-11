@@ -3,10 +3,13 @@
 namespace WebstoreBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use WebstoreBundle\Entity\Role;
 use WebstoreBundle\Entity\User;
 use WebstoreBundle\Form\UserType;
+
 
 
 class UserController extends Controller
@@ -24,11 +27,14 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPassword());
-
             $user->setPassword($password);
+
+            $roleRepository = $this->getDoctrine()->getRepository(Role::class);
+            $userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
+            $user->addRole($userRole);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
@@ -43,6 +49,7 @@ class UserController extends Controller
 
     /**
      * @Route("users/all", name="all_users")
+     * @Security("has_role('ROLE_USER')")
      */
     public function allUsersAction()
     {
@@ -50,6 +57,4 @@ class UserController extends Controller
 
         return $this->render("user/all.html.twig", ['users' => $users]);
     }
-
-
 }
