@@ -50,12 +50,23 @@ class ProductController extends Controller
 
     /**
      * @Route("products", name="products_all")
+     * @param Request $request
      */
-    public function allProducts()
+    public function allProducts(Request $request)
     {
-        $products = $this->getDoctrine()->getManager()->getRepository(Product::class)->findAll();
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT a FROM WebstoreBundle:Product a ORDER BY a.addedOn DESC";
+        $query = $em->createQuery($dql);
 
-        return $this->render("product/all.html.twig", ['products' => $products]);
+        $paginator = $this->get('knp_paginator');
+
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 3)
+        );
+
+        return $this->render("product/all.html.twig", ['products' => $pagination]);
 
     }
 

@@ -2,6 +2,7 @@
 
 namespace WebstoreBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -29,7 +30,10 @@ class ProductType extends AbstractType
                 [
                     'currency' => 'USD'
                 ])
-            ->add('quantity', IntegerType::class);
+            ->add('quantity', IntegerType::class)
+            ->add('category', null,[
+                'placeholder' => 'Choose category'
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
