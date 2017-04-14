@@ -2,6 +2,7 @@
 
 namespace WebstoreBundle\Controller;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -21,16 +22,22 @@ class ProductController extends Controller
     {
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
             $product->setOwner($this->getUser());
-            //picture upload service
-            $picture = 'default.png';
-            $product->setPicture('images/users/profile-pics/'.$picture);
+            $product->setAddedOn(new \DateTime());
 
+            /** @var UploadedFile $file */
+            $file = $product->getImage();
+            $path = '/../web/images/products/';
+            $filename = md5($product->getName() . '' . $product->getAddedOn()->format('Y-m-d H:i:s'));
+            $file->move(
+                $this->get('kernel')->getRootDir() . $path,
+                $filename.'.png');
+            $product->setImage('images/products/' . $filename . '.png');
+//            $product->setImage('images/products/default.jpg');
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
             $em->flush();

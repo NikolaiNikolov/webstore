@@ -1,3 +1,12 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway);
+
+@font-face {
+    font-family: 'Raleway-ExtraBold';
+}
+
+html * {
+    font-family: 'Raleway', sans-serif;
+}
 
 h1{
     font-size: 30px;
@@ -79,4 +88,48 @@ a:hover {
 
 .centered {
     margin: 0 auto;
+}
+
+footer {
+}
+
+.view-product {
+    margin: 0 auto;
+}
+
+.product-title, .product-title:hover, .product-title:active, .product-title:visited, .product-title:focus {
+    text-decoration:none;
+}
+
+.product-title {
+    color: darkslategray;
+}
+
+.product-title:hover {
+    color: dodgerblue;
+}
+
+.product-image {
+    width: 500px;
+}
+
+.product-thumbnail {
+    width: 250px;
+    height: 150px;
+    border-radius: 5px;
+
+}
+
+.product {
+    border: 1px solid lightgray;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.product-description {
+    height: 60px;
+    white-space: pre-line;
+    overflow: auto;
+    word-wrap: break-word;
 }

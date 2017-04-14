@@ -73,7 +73,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="balance", type="decimal", precision=10, scale=2)
      */
-    private $balance = 0.00;
+    private $balance = 100.00;
 
     /**
      * @var ArrayCollection

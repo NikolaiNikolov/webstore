@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="col-md-4">
+        <img class="product-image" src="{{ asset(product.image) }}" alt="">
         <h1><strong>{{ product.name }}</strong></h1>
         <div><strong>Description: </strong><br>{{ product.description }}</div>
         <p><strong>Price: </strong>{{ product.price }}</p>
