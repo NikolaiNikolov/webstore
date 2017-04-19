@@ -31,9 +31,12 @@ class ProductType extends AbstractType
                     'currency' => 'USD'
                 ])
             ->add('quantity', IntegerType::class)
-            ->add('category', null,[
-                'placeholder' => 'Choose category'
-            ]);
+            ->add('category',
+                null,
+                [
+                'placeholder' => 'Choose category',
+            ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

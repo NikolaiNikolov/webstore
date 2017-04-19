@@ -52,6 +52,9 @@ class User implements UserInterface
      */
     private $lastName;
 
+    
+    private $cart;
+
     /**
      * @return float
      */
@@ -100,7 +103,6 @@ class User implements UserInterface
      *     )
      */
     private $roles;
-
 
 
 

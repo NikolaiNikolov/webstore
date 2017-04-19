@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="container">
+
         <div class="row">
         <h1>Products</h1>
         <hr>
@@ -15,16 +16,16 @@
                         background-size: contain;
                         ">
                 </div>
-                <h2><a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">{{ product.name }}</a>
-            </h2>
-            <p class="product-description">{{ product.summary }}</p>
-            <p><strong>Price: </strong>${{ product.price }}</p>
-            <p><strong>Quantity: </strong> {{ product.quantity }}</p>
-            <p><strong>{{ product.owner.username }}</strong></p>
-                <p><strong>Category: </strong>{{ product.category }}</p>
-            <p><strong>In stock:</strong> {{ product.inStock ? 'yes' : 'no' }}</p>
-            <p>{{ product.addedOn|date('d/m/Y h:m:s') }}</p>
-            <a href="#" class="btn btn-success">
+                <h3><a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">{{ product.name }}</a>
+            </h3>
+            <div class="product-description">{{ product.summary }}</div>
+            <div><strong>Price: </strong>${{ product.price }}</div>
+            <div><strong>Quantity: </strong> {{ product.quantity }}</div>
+            <div><strong>{{ product.owner.username }}</strong></div>
+                <p><strong>Category: </strong><a href="{{ path('view_category', {id: product.category.id}) }}" target="_blank">{{ product.category }}</a></p>
+            {#<p><strong>In stock:</strong> {{ product.inStock ? 'yes' : 'no' }}</p>#}
+            {#<p>{{ product.addedOn|date('d/m/Y h:m:s') }}</p>#}
+            <a href="#" class="btn btn-primary">
                 Add to cart
             </a>
         </div>
@@ -35,7 +36,6 @@
             {{ knp_pagination_render(products) }}
         </div>
     </div>
-
 
 
 {% endblock %}

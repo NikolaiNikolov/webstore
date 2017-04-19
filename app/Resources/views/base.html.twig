@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap-theme.min.css') }}">
         <script src="{{ asset('js/jquery-3.2.0.min.js') }}"></script>
     {% endblock %}
@@ -40,7 +41,22 @@
                         <li><a href="{{ path('all_users') }}">All users</a></li>
                         <li><a href="{{ path('products_all') }}">All products</a></li>
                         <li><a href="{{ path('products_add') }}">Add product</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                Categories
+
+                                <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li><a href="#">other</a></li>
+                                <li role="separator" class="divider"></li>
+
+                            </ul>
+                        </li>
                     </ul>
+
+
 
                     <ul class="nav navbar-nav navbar-right">
                         {% if app.user %}
@@ -79,13 +95,13 @@
 
 <body id="{% block body_id %}{% endblock %}">
 
-{% for flash_message in app.session.flashBag.get('notice') %}
-    <div class="alert alert-success">
-        {{ flash_message }}
-    </div>
-{% endfor %}
 
 
+    {% for flash_message in app.session.flashBag.get('notice') %}
+        <div class="alert alert-success">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
 {% block content %}
 
 {% endblock %}

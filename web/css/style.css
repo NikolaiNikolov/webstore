@@ -118,15 +118,25 @@ a:hover {
 }
 
 .product {
-    border: 1px solid lightgray;
-    margin: 10px;
-    padding: 10px;
+    border: 1px solid #EEEEEE;
+    margin: 14px;
+    padding: 14px;
     border-radius: 5px;
 }
 
 .product-description {
-    height: 60px;
+    height: 45px;
     white-space: pre-line;
     overflow: auto;
     word-wrap: break-word;
+}
+
+.inventory-item {
+    height: 100px;
+    width: 100px;
+    border: 1px solid darkgrey;
+}
+
+.product-box {
+    width: 700px;
 }

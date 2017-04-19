@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use WebstoreBundle\Entity\Product;
 use WebstoreBundle\Form\ProductType;
 
@@ -36,6 +37,7 @@ class ProductController extends Controller
             $file->move(
                 $this->get('kernel')->getRootDir() . $path,
                 $filename.'.png');
+
             $product->setImage('images/products/' . $filename . '.png');
 //            $product->setImage('images/products/default.jpg');
             $em = $this->getDoctrine()->getManager();
@@ -63,7 +65,7 @@ class ProductController extends Controller
         $pagination = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            $request->query->getInt('limit', 3)
+            $request->query->getInt('limit', 6)
         );
 
         return $this->render("product/all.html.twig", ['products' => $pagination]);
@@ -78,5 +80,27 @@ class ProductController extends Controller
     public function viewOneAction(Product $product)
     {
         return $this->render('product/view.html.twig', ['product' => $product]);
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/category/{id}", name="view_category")
+     *
+     */
+    public function viewCategory($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT a FROM WebstoreBundle:Product a WHERE a.category = '$id' ORDER BY a.addedOn DESC";
+        $query = $em->createQuery($dql);
+
+        $paginator = $this->get('knp_paginator');
+
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 6)
+        );
+
+        return $this->render("product/all.html.twig", ['products' => $pagination]);
     }
 }
