@@ -20,20 +20,30 @@ class ProductType extends AbstractType
     {
         $builder
             ->add('name', TextType::class)
+
+            ->add('description', TextareaType::class)
             ->add('image', FileType::class,
                 [
                     'data_class' => null,
-                    'required' => false
+                    'required' => false,
+                    'label_attr' => ['class' => 'btn btn-block btn-primary btn-file'],
+                    'attr' => [
+                        'class' => 'hidden',
+                        'accept' => 'image/*'
+                    ]
                 ])
-            ->add('description', TextareaType::class)
             ->add('price', MoneyType::class,
                 [
-                    'currency' => 'USD'
+                    'currency' => 'BGN'
                 ])
             ->add('quantity', IntegerType::class)
-            ->add('category', null,[
-                'placeholder' => 'Choose category'
-            ]);
+
+            ->add('category',
+                null,
+                [
+                'placeholder' => 'Choose category',
+            ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

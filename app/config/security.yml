@@ -43,4 +43,7 @@ security:
         # this is a catch-all for the admin area
         # additional security lives in the controllers
 #        - { path: '^/(%locale%)/admin', roles: ROLE_ADMIN }
+        # require ROLE_ADMIN for /admin*
+        - { path: ^/admin, roles: ROLE_ADMIN }
+
 

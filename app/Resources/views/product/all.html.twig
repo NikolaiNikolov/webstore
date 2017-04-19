@@ -2,31 +2,52 @@
 
 {% block content %}
     <div class="container">
+
         <div class="row">
         <h1>Products</h1>
         <hr>
-        {% for product in products %}
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 product">
-                <div class="product-thumbnail center-block"
-                     style="
-                        background: url( {{ asset( product.image) }} );
-                        background-repeat: no-repeat;
-                        background-position: center;
-                        background-size: contain;
-                        ">
+            <div class="filter">
+            <form METHOD="post">
+                <div class="form-group">
+                    <label class="control-label text-center" for="filter">
+                        Sort by:
+                    </label>
+                    <select class="form-control" name="filter" id="filter">
+                        <option value="0">Default</option>
+                        <option value="1">Name (A - Z)</option>
+                        <option value="2">Name (Z - A)</option>
+                        <option value="3">Prize (Low > High)</option>
+                        <option value="4">Prize (High > Low)</option>
+                    </select>
                 </div>
-                <h2><a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">{{ product.name }}</a>
-            </h2>
-            <p class="product-description">{{ product.summary }}</p>
-            <p><strong>Price: </strong>${{ product.price }}</p>
-            <p><strong>Quantity: </strong> {{ product.quantity }}</p>
-            <p><strong>{{ product.owner.username }}</strong></p>
-                <p><strong>Category: </strong>{{ product.category }}</p>
-            <p><strong>In stock:</strong> {{ product.inStock ? 'yes' : 'no' }}</p>
-            <p>{{ product.addedOn|date('d/m/Y h:m:s') }}</p>
-            <a href="#" class="btn btn-success">
-                Add to cart
-            </a>
+                <input type="submit" hidden>
+            </form>
+            </div>
+
+            {% for product in products %}
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 product">
+                {#<div class="product-thumbnail center-block"#}
+                     {#style="#}
+                        {#background: url( {{ asset( product.image) }} );#}
+                        {#background-repeat: no-repeat;#}
+                        {#background-position: center;#}
+                        {#background-size: contain;#}
+                        {#">#}
+                {#</div>#}
+                <img class="product-image" src="{{ asset(product.image) }}" alt="">
+
+                <h3><a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">{{ product.name }}</a>
+            </h3>
+            <div class="product-description">{{ product.summary }}</div>
+            <div><strong>Price: </strong>${{ product.price }}</div>
+            <div><strong>Quantity: </strong> {{ product.quantity }}</div>
+            <div><strong>{{ product.owner.username }}</strong></div>
+                <p><strong>Category: </strong><a href="{{ path('view_category', {id: product.category.id}) }}" target="_blank">{{ product.category }}</a></p>
+            {#<p><strong>In stock:</strong> {{ product.inStock ? 'yes' : 'no' }}</p>#}
+            {#<p>{{ product.addedOn|date('d/m/Y h:m:s') }}</p>#}
+            {#<a href="#" class="btn btn-primary">#}
+                {#Add to cart#}
+            {#</a>#}
         </div>
         {% endfor %}
         </div>
@@ -35,7 +56,6 @@
             {{ knp_pagination_render(products) }}
         </div>
     </div>
-
 
 
 {% endblock %}

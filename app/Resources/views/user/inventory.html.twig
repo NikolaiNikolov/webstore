@@ -1,0 +1,23 @@
+{% extends('base.html.twig') %}
+
+{% block content %}
+    <div class="container">
+        <div class="product-box">
+
+    {% for product in products %}
+
+        <div class="col-md-2">
+            <div class="inventory-item center-block"
+                 style="
+                         background: url( {{ asset( product.image) }} );
+                         background-repeat: no-repeat;
+                         background-position: center;
+                         background-size: contain;
+                         ">
+            </div>
+        </div>
+
+    {% endfor %}
+        </div>
+    </div>
+{% endblock %}

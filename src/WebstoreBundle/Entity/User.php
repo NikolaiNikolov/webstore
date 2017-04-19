@@ -4,6 +4,9 @@ namespace WebstoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -51,6 +54,7 @@ class User implements UserInterface
      * @ORM\Column(name="lastName", type="string", length=255)
      */
     private $lastName;
+
 
     /**
      * @return float
@@ -101,8 +105,14 @@ class User implements UserInterface
      */
     private $roles;
 
-
-
+    /**
+     * @ManyToMany(targetEntity="WebstoreBundle\Entity\Product")
+     * @JoinTable(name="users_carts",
+     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="product_id", referencedColumnName="id")}
+     *      )
+     */
+    private $cartProducts;
 
     /**
      * Get id
@@ -231,6 +241,11 @@ class User implements UserInterface
         return array_map(function (Role $role){return $role->getName();}, $this->roles->toArray());
     }
 
+    public function getCartProducts()
+    {
+
+    }
+
 
     /**
      * @param Role $role
@@ -240,6 +255,18 @@ class User implements UserInterface
     public function addRole(Role $role)
     {
         $this->roles[] = $role;
+
+        return $this;
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return User
+     */
+    public function addCartProduct(Product $product)
+    {
+        $this->cartProducts[] = $product;
 
         return $this;
     }
@@ -271,6 +298,23 @@ class User implements UserInterface
     {
         $this->products = new ArrayCollection();
         $this->roles = new ArrayCollection();
+        $this->cartProducts = new ArrayCollection();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOwner(Product $product)
+    {
+        return $product->getOwner()->getUsername() == $this->getUsername();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return in_array("ROLE_ADMIN", $this->getRoles());
     }
 }
 

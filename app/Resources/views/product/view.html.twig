@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <div class="col-md-4">
+    <div class="container">
+    <div class="col-md-4 center-block">
         <img class="product-image" src="{{ asset(product.image) }}" alt="">
         <h1><strong>{{ product.name }}</strong></h1>
         <div><strong>Description: </strong><br>{{ product.description }}</div>
@@ -9,8 +10,17 @@
         <p><strong>Quantity: </strong>{{ product.quantity }}</p>
         <p><strong>Date: </strong>{{ product.addedOn|date('d-m-y') }}</p>
         <p><strong>Owner: </strong>{{ product.owner.username }}</p>
-    </div>
 
+        {% if app.User() %}
+            {% if app.User.isOwner(product) or app.getUser().isAdmin() %}
+                <a class="btn btn-success" href="{{ path('product_edit', {id: product.id}) }}">Edit</a>
+                <a class="btn btn-danger" href="#">Delete</a>
+            {% else %}
+                <a class="btn btn-primary" href="#">Add to cart</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    </div>
 
 {% endblock %}
 

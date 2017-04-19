@@ -4,6 +4,11 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    #service_name:
+    #    class: AppBundle\Directory\ClassName
+    #    arguments: ['@another_service_name', 'plain_value', '%parameter_name%']
+    category_container:
+        class: WebstoreBundle\Service\CategoryContainer
+        arguments: [ '@doctrine.orm.entity_manager' ]
+        calls:
+          - method: getCategories
