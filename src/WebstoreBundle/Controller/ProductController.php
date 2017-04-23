@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use WebstoreBundle\Entity\Product;
 use WebstoreBundle\Form\ProductType;
 
@@ -83,6 +84,7 @@ class ProductController extends Controller
         $sort = $this->sort($request);
         $products = $paginator->paginate(
             $this->getDoctrine()->getRepository(Product::class)->findAllByCategory($id)->orderBy($sort[0], $sort[1]),
+
             $request->query->getInt('page', 1),
             $request->query->getInt('limit', 6)
         );

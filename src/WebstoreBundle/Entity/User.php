@@ -55,7 +55,6 @@ class User implements UserInterface
      */
     private $lastName;
 
-
     /**
      * @return float
      */
@@ -104,15 +103,6 @@ class User implements UserInterface
      *     )
      */
     private $roles;
-
-    /**
-     * @ManyToMany(targetEntity="WebstoreBundle\Entity\Product")
-     * @JoinTable(name="users_carts",
-     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="product_id", referencedColumnName="id")}
-     *      )
-     */
-    private $cartProducts;
 
     /**
      * Get id
@@ -241,11 +231,6 @@ class User implements UserInterface
         return array_map(function (Role $role){return $role->getName();}, $this->roles->toArray());
     }
 
-    public function getCartProducts()
-    {
-
-    }
-
 
     /**
      * @param Role $role
@@ -255,18 +240,6 @@ class User implements UserInterface
     public function addRole(Role $role)
     {
         $this->roles[] = $role;
-
-        return $this;
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @return User
-     */
-    public function addCartProduct(Product $product)
-    {
-        $this->cartProducts[] = $product;
 
         return $this;
     }
@@ -298,7 +271,6 @@ class User implements UserInterface
     {
         $this->products = new ArrayCollection();
         $this->roles = new ArrayCollection();
-        $this->cartProducts = new ArrayCollection();
     }
 
     /**

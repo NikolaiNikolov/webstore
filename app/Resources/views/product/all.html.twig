@@ -20,21 +20,15 @@
                         <option value="4">Prize (High > Low)</option>
                     </select>
                 </div>
+
                 <input type="submit" hidden>
             </form>
             </div>
 
             {% for product in products %}
             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 product">
-                {#<div class="product-thumbnail center-block"#}
-                     {#style="#}
-                        {#background: url( {{ asset( product.image) }} );#}
-                        {#background-repeat: no-repeat;#}
-                        {#background-position: center;#}
-                        {#background-size: contain;#}
-                        {#">#}
-                {#</div>#}
                 <img class="product-image" src="{{ asset(product.image) }}" alt="">
+
 
                 <h3><a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">{{ product.name }}</a>
             </h3>
@@ -43,11 +37,8 @@
             <div><strong>Quantity: </strong> {{ product.quantity }}</div>
             <div><strong>{{ product.owner.username }}</strong></div>
                 <p><strong>Category: </strong><a href="{{ path('view_category', {id: product.category.id}) }}" target="_blank">{{ product.category }}</a></p>
-            {#<p><strong>In stock:</strong> {{ product.inStock ? 'yes' : 'no' }}</p>#}
-            {#<p>{{ product.addedOn|date('d/m/Y h:m:s') }}</p>#}
-            {#<a href="#" class="btn btn-primary">#}
-                {#Add to cart#}
-            {#</a>#}
+                <a class="btn btn-primary" href="#">Add to cart</a>
+
         </div>
         {% endfor %}
         </div>
