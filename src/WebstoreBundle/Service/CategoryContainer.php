@@ -2,6 +2,7 @@
 namespace WebstoreBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use WebstoreBundle\Entity\Category;
 
 class CategoryContainer
 {
@@ -16,9 +17,7 @@ class CategoryContainer
 
     public function getCategories()
     {
-        $repo = $this->em->getRepository('WebstoreBundle:Category');
-
-
+        $repo = $this->em->getRepository(Category::class);
 
         $categories = $repo->createQueryBuilder('c')
             ->select("c")

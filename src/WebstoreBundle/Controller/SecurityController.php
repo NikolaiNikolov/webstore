@@ -3,6 +3,7 @@
 namespace WebstoreBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -29,12 +30,24 @@ class SecurityController extends Controller
     }
 
     /**
+     * @Route("editor", name="a")
+     */
+    public function editor() {
+
+    }
+
+    /**
      * @Route("register", name="user_register")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function registerAction(Request $request)
     {
+        if ($this->getUser())
+        {
+            return $this->redirectToRoute('security_login');
+        }
+
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
@@ -42,7 +55,6 @@ class SecurityController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
-
             $user->setPassword($password);
 
             $roleRepository = $this->getDoctrine()->getRepository(Role::class);

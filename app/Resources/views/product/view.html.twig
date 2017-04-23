@@ -3,24 +3,46 @@
 {% block content %}
     <div class="container">
 
-    <div class="col-md-4 center-block">
-        <img class="product-image" src="{{ asset(product.image) }}" alt="">
-        <h1><strong>{{ product.name }}</strong></h1>
-        <div><strong>Description: </strong><br>{{ product.description }}</div>
-        <p><strong>Price: </strong>{{ product.price }}</p>
-        <p><strong>Quantity: </strong>{{ product.quantity }}</p>
-        <p><strong>Date: </strong>{{ product.addedOn|date('d-m-y') }}</p>
-        <p><strong>Owner: </strong>{{ product.owner.username }}</p>
+    {#<div class="col-md-4 center-block">#}
+        {#<img class="product-image" src="{{ asset(product.image) }}" alt="">#}
+        {#<h1><strong>{{ product.name }}</strong></h1>#}
+        {#<div><strong>Description: </strong><br>{{ product.description }}</div>#}
+        {#<p><strong>Price: </strong>{{ product.price }}</p>#}
+        {#<p><strong>Quantity: </strong>{{ product.quantity }}</p>#}
+        {#<p><strong>Date: </strong>{{ product.addedOn|date('d-m-y') }}</p>#}
+        {#<p><strong>Owner: </strong>{{ product.owner.username }}</p>#}
 
-        {% if app.User() %}
-            <a class="btn btn-primary" href="#">Add to cart</a>
-            {% if app.User.IsOwner(product) or app.getUser().isAdmin() %}
-                <a class="btn btn-success" href="{{ path('product_edit', {id: product.id}) }}">Edit</a>
-                <a class="btn btn-danger" href="#">Delete</a>
-            {% endif %}
-        {% endif %}
-    </div>
+        <div class="row product-info">
+            <div class="col-md-6">
+                <img class="product-image-big" src="{{ asset(product.image) }}" alt="{{ product.name }}">
+            </div>
+            <div class="col-md-6">
+                {% if app.User() %}
+                    {% if app.User.isAdmin() or app.getUser().isEditor() %}
+                        <form method="post" action="{{ path('product_delete', {id: product.id}) }}">
+                            <a class="btn btn-success" href="{{ path('product_edit', {id: product.id}) }}">Edit</a>
+                            <input onclick="return confirm('Are you sure you want to delete {{ product.name }}?')" type="submit" class="btn btn-danger" value="Delete">
+                        </form>
+                    {% endif %}
+                {% endif %}
+                <h1>{{ product.name }}</h1>
+                <p class="product-description-view">{{ product.description }}</p>
+                <h5><strong>Added on:</strong> {{ product.addedOn|date('d-m-y') }}</h5>
+                <h5><strong>Price:</strong> ${{ product.price }}</h5>
+                <h5><strong>Added by:</strong> {{ product.owner.username }}</h5>
+                <h5><strong>Availability:</strong> {{ product.inStock ? 'In stock' : 'no' }}</h5>
+                <h5><strong>Quantity:</strong> {{ product.quantity }}</h5>
+
+                {% if app.User().isOwner(product) %}
+                {% else %}
+                    <form method="post" action="{{ path('add_to_cart', {id: product.id}) }}">
+                        <input type="submit" class="btn btn-primary" value="Add to cart">
+                    </form>
+                {% endif %}
+                </div>
+        </div>
     </div>
 
+    <div style="height: 150px"></div>
 {% endblock %}
 

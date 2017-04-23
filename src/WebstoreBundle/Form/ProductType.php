@@ -4,6 +4,7 @@ namespace WebstoreBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -43,6 +44,14 @@ class ProductType extends AbstractType
                 [
                 'placeholder' => 'Choose category',
             ]
+            )
+            ->add('available', ChoiceType::class, [
+                    'choices' => [
+                        'Put on the market' => true,
+                        'Save in storage' => false
+                    ],
+                    'label' => 'Status'
+                ]
             );
     }
 

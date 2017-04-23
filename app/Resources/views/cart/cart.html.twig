@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        {% if products is empty %}
+            <h1 class="text-center">You have no items in your cart.</h1>
+            <p class="text-center">Head to the <a href="{{ path('products_all') }}">market</a> to add some.</p>
+        {% else %}
+    <table id="cart" class="table table-hover table-condensed">
+        <thead>
+        <tr>
+            <th style="width:50%">Product</th>
+            <th style="width:10%">Price</th>
+            <th style="width:8%">Quantity</th>
+            <th style="width:22%" class="text-center">Subtotal</th>
+            <th style="width:10%"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cart in products %}
+        <tr>
+            <td data-th="Product">
+                <div class="row">
+                    <div class="col-sm-2 hidden-xs"><img src="{{ asset(cart.product.image) }}" alt="..." class="img-responsive"/></div>
+                    <div class="col-sm-10">
+                        <h4 class="nomargin">{{ cart.product.name }}</h4>
+                        <p>{{ cart.product.description }}</p>
+                    </div>
+                </div>
+            </td>
+            <td data-th="Price">${{ cart.product.price }}</td>
+            <td data-th="Quantity">
+                    <input type="number" class="form-control text-center" value="{{ cart.quantity }}">
+            </td>
+            <td data-th="Subtotal" class="text-center">${{ (cart.product.price * cart.quantity)|number_format(2, '.') }}</td>
+            <td class="actions" data-th="">
+                <form method="POST" action="">
+                </form>
+                <p></p>
+                <input name="update_cart" type="submit" class="btn btn-info btn-sm" value="Update">
+                <p></p>
+                <input name="remove_from_cart" onclick="return confirm('Are you sure you want to remove {{ cart.product.name }} from your cart?')"
+                           type="submit" class="btn btn-danger btn-sm" value="Remove">
+            </td>
+        </tr>
+        </tbody>
+        {% endfor %}
+
+        <tfoot>
+        <tr class="visible-xs">
+            <td class="text-center"><strong>Total {{ total|number_format(2, '.') }}</strong></td>
+        </tr>
+        <tr>
+            <td><a href="{{ path('products_all') }}" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
+            <td colspan="2" class="hidden-xs"></td>
+            <td class="hidden-xs text-center"><strong>Total {{ total|number_format(2, '.') }}</strong></td>
+            <td>
+                <form name="checkout_cart" method="post" action="{{ path('checkout_cart') }}">
+                    <input name="checkout_cart" type="submit" class="btn btn-success btn-block" value="Checkout">
+                </form>
+        </tr>
+        </tfoot>
+    </table>
+        {% endif %}
+    </div>
+{% endblock %}

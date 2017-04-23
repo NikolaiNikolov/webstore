@@ -12,3 +12,12 @@ services:
         arguments: [ '@doctrine.orm.entity_manager' ]
         calls:
           - method: getCategories
+    picture_upload:
+        class: WebstoreBundle\Service\UploadPicture
+        arguments: ['@kernel']
+    sort_products:
+        class: WebstoreBundle\Service\SortProducts
+        arguments: []
+    validate:
+        class: WebstoreBundle\Service\ValidationService
+        autowire: true

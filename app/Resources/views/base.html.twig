@@ -56,14 +56,12 @@
                         {% endif %}
                     </ul>
 
-
-
                     <ul class="nav navbar-nav navbar-right">
 
                         {% if app.user %}
-                            <li><a href="#">
+                            <li><a href="{{ path('user_cart') }}">
                                     <img class="user-pic" src="{{ asset('images/icons/cart.png') }}" alt="pic">
-                                    <strong>Cart</strong> (0 items)
+                                    <strong>Cart</strong>
                                 </a>
                             </li>
                         <li class="dropdown">
@@ -75,6 +73,7 @@
 
                             <ul class="dropdown-menu">
                                 <li><a href="#">Profile</a></li>
+                                <li><a href="{{ path('user_inventory') }}">Inventory</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{{ path('security_logout') }}">Log out</a></li>
                             </ul>
@@ -97,13 +96,18 @@
 
 <body id="{% block body_id %}{% endblock %}">
 
-
-
+<div class="error-box center-block">
     {% for flash_message in app.session.flashBag.get('notice') %}
         <div class="alert alert-success">
             {{ flash_message }}
         </div>
     {% endfor %}
+    {% for flash_message in app.session.flashBag.get('error') %}
+        <div class="alert alert-danger">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+</div>
 {% block content %}
 
 {% endblock %}

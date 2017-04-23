@@ -40,10 +40,11 @@ security:
                 target: shop_index
 
     access_control:
-        # this is a catch-all for the admin area
-        # additional security lives in the controllers
-#        - { path: '^/(%locale%)/admin', roles: ROLE_ADMIN }
-        # require ROLE_ADMIN for /admin*
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/editor, roles: [ROLE_ADMIN, ROLE_EDITOR] }
+        - { path: ^/products/add, roles: [ROLE_ADMIN, ROLE_EDITOR] }
+        - { path: ^/products/edit, roles: [ROLE_ADMIN, ROLE_EDITOR] }
+
+
 
 

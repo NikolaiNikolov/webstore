@@ -1,23 +1,67 @@
-{% extends('base.html.twig') %}
+{% extends 'base.html.twig' %}
 
 {% block content %}
     <div class="container">
-        <div class="product-box">
 
-    {% for product in products %}
+        <div class="row">
+            <h1>Inventory</h1>
+            <hr>
+            <div class="filter">
+                <form METHOD="post">
+                    <div class="form-group">
+                        <label class="control-label text-center" for="filter">
+                            Sort by:
+                        </label>
+                        <select class="form-control" name="filter" id="filter">
+                            <option value="0">Default</option>
+                            <option value="1">Name (A - Z)</option>
+                            <option value="2">Name (Z - A)</option>
+                            <option value="3">Prize (Low > High)</option>
+                            <option value="4">Prize (High > Low)</option>
+                        </select>
+                    </div>
 
-        <div class="col-md-2">
-            <div class="inventory-item center-block"
-                 style="
-                         background: url( {{ asset( product.image) }} );
-                         background-repeat: no-repeat;
-                         background-position: center;
-                         background-size: contain;
-                         ">
+                    <input type="submit" hidden>
+                </form>
             </div>
+
+            {% if products is empty %}
+                <div>
+                    <h1>Your inventory is empty</h1>
+                    <p>Head to the<a href="{{ path('products_all') }}"> marketplace</a> to buy products
+                        or <a href="{{ path('products_add') }}">add a new product</a>.</p>
+                </div>
+            {% endif %}
+
+            {% for product in products %}
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 product">
+
+                    <h3><a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">
+                            <img class="product-image" src="{{ asset(product.image) }}" alt="{{ product.name }}">
+
+                            {{ product.name }}</a>
+                    </h3>
+                    <div class="product-description">{{ product.summary }}</div>
+                    <div><strong>Price: </strong>${{ product.price }}</div>
+                    <div><strong>Quantity: </strong> {{ product.quantity }}</div>
+                    <div><strong>Status: </strong> {{ product.isAvailable ? 'For sale' : 'In stash' }}</div>
+                    <p><strong>Category: </strong><a href="{{ path('view_category', {id: product.category.id}) }}" target="_blank">{{ product.category }}</a></p>
+                    {#<form method="post" action="{{ path('product_delete', {id: product.id}) }}">#}
+                        {#<a class="btn btn-success" href="{{ path('product_edit', {id: product.id}) }}">Edit</a>#}
+                        {#<input onclick="return confirm('Are you sure you want to delete {{ product.name }}?')" type="submit" class="btn btn-danger" value="Delete">#}
+                    {#</form>#}
+                    <form method="post" action="{{ path('sell_product', {id: product.id}) }}">
+                        <input type="submit" class="btn btn-success" value="Sell product">
+                    </form>
+                </div>
+            {% endfor %}
         </div>
 
-    {% endfor %}
+        <div class="navigation">
+            {{ knp_pagination_render(products) }}
         </div>
     </div>
+
+
 {% endblock %}
+

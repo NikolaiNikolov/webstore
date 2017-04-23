@@ -231,6 +231,15 @@ class User implements UserInterface
         return array_map(function (Role $role){return $role->getName();}, $this->roles->toArray());
     }
 
+    public function addMoney($money)
+    {
+        $this->setBalance($this->getBalance() + $money);
+    }
+
+    public function takeMoney($money)
+    {
+        $this->setBalance($this->getBalance() - $money);
+    }
 
     /**
      * @param Role $role
@@ -287,6 +296,14 @@ class User implements UserInterface
     public function isAdmin()
     {
         return in_array("ROLE_ADMIN", $this->getRoles());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEditor()
+    {
+        return in_array("ROLE_EDITOR", $this->getRoles());
     }
 }
 
