@@ -20,6 +20,7 @@
                         <option value="4">Prize (High > Low)</option>
                     </select>
                 </div>
+<<<<<<< HEAD
                 <input type="submit" hidden>
             </form>
             </div>
@@ -36,6 +37,8 @@
                 {#</div>#}
                 <img class="product-image" src="{{ asset(product.image) }}" alt="">
 
+=======
+>>>>>>> f4e175df6c247e5c26c3ea7f4cc72669d236b479
                 <h3><a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">{{ product.name }}</a>
             </h3>
             <div class="product-description">{{ product.summary }}</div>
@@ -45,9 +48,15 @@
                 <p><strong>Category: </strong><a href="{{ path('view_category', {id: product.category.id}) }}" target="_blank">{{ product.category }}</a></p>
             {#<p><strong>In stock:</strong> {{ product.inStock ? 'yes' : 'no' }}</p>#}
             {#<p>{{ product.addedOn|date('d/m/Y h:m:s') }}</p>#}
+<<<<<<< HEAD
             {#<a href="#" class="btn btn-primary">#}
                 {#Add to cart#}
             {#</a>#}
+=======
+            <a href="#" class="btn btn-primary">
+                Add to cart
+            </a>
+>>>>>>> f4e175df6c247e5c26c3ea7f4cc72669d236b479
         </div>
         {% endfor %}
         </div>

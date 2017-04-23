@@ -37,7 +37,10 @@ class ProductType extends AbstractType
                     'currency' => 'BGN'
                 ])
             ->add('quantity', IntegerType::class)
+<<<<<<< HEAD
 
+=======
+>>>>>>> f4e175df6c247e5c26c3ea7f4cc72669d236b479
             ->add('category',
                 null,
                 [

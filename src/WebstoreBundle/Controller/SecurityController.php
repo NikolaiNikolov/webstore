@@ -63,4 +63,42 @@ class SecurityController extends Controller
         return $this->render('user/register.html.twig', ['form' => $form->createView()]);
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * @Route("register", name="user_register")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function registerAction(Request $request)
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
+
+            $user->setPassword($password);
+
+            $roleRepository = $this->getDoctrine()->getRepository(Role::class);
+            $userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
+            $user->addRole($userRole);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
+            $this->get('security.token_storage')->setToken($token);
+
+            $this->addFlash('notice', 'You registered successfully!');
+
+            return $this->redirectToRoute('shop_index');
+        }
+        return $this->render('user/register.html.twig', ['form' => $form->createView()]);
+    }
+
+>>>>>>> f4e175df6c247e5c26c3ea7f4cc72669d236b479
 }

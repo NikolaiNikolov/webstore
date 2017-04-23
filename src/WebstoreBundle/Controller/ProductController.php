@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use WebstoreBundle\Entity\Product;
 use WebstoreBundle\Form\ProductType;
 
@@ -31,8 +32,21 @@ class ProductController extends Controller
             $product->setOwner($this->getUser());
             $product->setAddedOn(new \DateTime());
 
+<<<<<<< HEAD
             $this->uploadPicture($product);
 
+=======
+            /** @var UploadedFile $file */
+            $file = $product->getImage();
+            $path = '/../web/images/products/';
+            $filename = md5($product->getName() . '' . $product->getAddedOn()->format('Y-m-d H:i:s'));
+            $file->move(
+                $this->get('kernel')->getRootDir() . $path,
+                $filename.'.png');
+
+            $product->setImage('images/products/' . $filename . '.png');
+//            $product->setImage('images/products/default.jpg');
+>>>>>>> f4e175df6c247e5c26c3ea7f4cc72669d236b479
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
             $em->flush();
@@ -79,14 +93,26 @@ class ProductController extends Controller
      */
     public function viewCategory($id, Request $request)
     {
+<<<<<<< HEAD
         $paginator = $this->get('knp_paginator');
         $sort = $this->sort($request);
         $products = $paginator->paginate(
             $this->getDoctrine()->getRepository(Product::class)->findAllByCategory($id)->orderBy($sort[0], $sort[1]),
+=======
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT a FROM WebstoreBundle:Product a WHERE a.category = '$id' ORDER BY a.addedOn DESC";
+        $query = $em->createQuery($dql);
+
+        $paginator = $this->get('knp_paginator');
+
+        $pagination = $paginator->paginate(
+            $query,
+>>>>>>> f4e175df6c247e5c26c3ea7f4cc72669d236b479
             $request->query->getInt('page', 1),
             $request->query->getInt('limit', 6)
         );
 
+<<<<<<< HEAD
         return $this->render("product/all.html.twig", ['products' => $products, ]);
     }
 
@@ -174,5 +200,8 @@ class ProductController extends Controller
 
         return $this->render('product/edit.html.twig',
             ['product' => $product, 'form' => $form->createView()]);
+=======
+        return $this->render("product/all.html.twig", ['products' => $pagination]);
+>>>>>>> f4e175df6c247e5c26c3ea7f4cc72669d236b479
     }
 }

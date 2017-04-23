@@ -6,7 +6,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+<<<<<<< HEAD
 use Symfony\Component\HttpFoundation\Response;
+=======
+>>>>>>> f4e175df6c247e5c26c3ea7f4cc72669d236b479
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use WebstoreBundle\Entity\Role;
 use WebstoreBundle\Entity\User;
@@ -16,6 +19,11 @@ use WebstoreBundle\Form\UserType;
 
 class UserController extends Controller
 {
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> f4e175df6c247e5c26c3ea7f4cc72669d236b479
     /**
      * @Route("users/all", name="all_users")
      * @Security("has_role('ROLE_USER')")

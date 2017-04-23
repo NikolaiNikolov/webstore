@@ -55,6 +55,11 @@ class User implements UserInterface
      */
     private $lastName;
 
+<<<<<<< HEAD
+=======
+    
+    private $cart;
+>>>>>>> f4e175df6c247e5c26c3ea7f4cc72669d236b479
 
     /**
      * @return float
@@ -105,6 +110,7 @@ class User implements UserInterface
      */
     private $roles;
 
+<<<<<<< HEAD
     /**
      * @ManyToMany(targetEntity="WebstoreBundle\Entity\Product")
      * @JoinTable(name="users_carts",
@@ -113,6 +119,9 @@ class User implements UserInterface
      *      )
      */
     private $cartProducts;
+=======
+
+>>>>>>> f4e175df6c247e5c26c3ea7f4cc72669d236b479
 
     /**
      * Get id
