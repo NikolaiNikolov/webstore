@@ -42,8 +42,8 @@ class ProductType extends AbstractType
             ->add('category',
                 null,
                 [
-                'placeholder' => 'Choose category',
-            ]
+                    'placeholder' => 'Choose category',
+                ]
             )
             ->add('available', ChoiceType::class, [
                     'choices' => [
