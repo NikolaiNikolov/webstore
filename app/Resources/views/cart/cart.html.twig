@@ -16,8 +16,10 @@
             <th style="width:10%"></th>
         </tr>
         </thead>
+
         <tbody>
         {% for cart in products %}
+
         <tr>
             <td data-th="Product">
                 <div class="row">
@@ -30,21 +32,29 @@
             </td>
             <td data-th="Price">${{ cart.product.price }}</td>
             <td data-th="Quantity">
-                    <input type="number" class="form-control text-center" value="{{ cart.quantity }}">
+
+                <form id="{{ cart.product.id }}" name="quantity_form" method="post" action="{{ path('update_cart', {id: cart.product.id}) }}">
+                    <label for="quantity">
+                        <input min="1" name="quantity" type="number" class="form-control text-center" value="{{ cart.quantity }}">
+                    </label>
+                    <input name="update_cart" type="submit" class="btn btn-info btn-sm" value="Update">
+                </form>
+
             </td>
             <td data-th="Subtotal" class="text-center">${{ (cart.product.price * cart.quantity)|number_format(2, '.') }}</td>
             <td class="actions" data-th="">
-                <form method="POST" action="">
+                <p></p>
+
+                <form method="post" action="{{ path('remove_from_cart', {id: cart.product.id}) }}">
+                    <input name="remove_from_cart"
+                           type="submit"
+                           onclick="return confirm('Are you sure you want to remove {{ cart.product.name }}from your cart?')"
+                           class="btn btn-danger btn-sm" value="Remove">
                 </form>
-                <p></p>
-                <input name="update_cart" type="submit" class="btn btn-info btn-sm" value="Update">
-                <p></p>
-                <input name="remove_from_cart" onclick="return confirm('Are you sure you want to remove {{ cart.product.name }} from your cart?')"
-                           type="submit" class="btn btn-danger btn-sm" value="Remove">
             </td>
         </tr>
-        </tbody>
         {% endfor %}
+        </tbody>
 
         <tfoot>
         <tr class="visible-xs">

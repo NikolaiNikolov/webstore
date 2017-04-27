@@ -47,21 +47,6 @@ class CartController extends Controller
     }
 
     /**
-     * @Route("cart/action", name="cart_action")
-     * @Method("POST")
-     * @param Request $request
-     * @return Response
-     */
-    public function cartAction(Request $request)
-    {
-        $postData = $request->request->get('cart_form');
-
-
-        return $this->render('debug.html.twig', ['product' => $postData]);
-    }
-
-
-    /**
      * @Route("cart/add/{id}", name="add_to_cart" )
      * @Method("POST")
      * @param Product $product
@@ -133,23 +118,34 @@ class CartController extends Controller
     }
 
     /**
-     * @param Product $product
+     * @param Request $request
+     * @param $id
+     * @internal param Product $product
      * @Method("POST")
      * @Route("cart/update/{id}", name="update_cart")
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
         $repo = $this->getDoctrine()->getRepository(Cart::class);
-        /** @var Cart $cartProduct */
         $cartProduct = $repo->findOneBy(['product' => $id, 'user' => $this->getUser()]);
+        $newQuantity = $request->request->get('quantity');
 
         if (is_null($cartProduct))
         {
             return $this->redirectToRoute('user_cart');
         }
+        if ($newQuantity > 0)
+        {
+            $cartProduct->setQuantity($newQuantity);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($cartProduct);
+            $em->flush();
+        } else {
+            $this->addFlash('error', 'Quantity can\' be lower than 1');
+        }
 
-        $cartProduct->setQuantity(1);
+
+        return $this->redirectToRoute('user_cart');
     }
 
     /**
