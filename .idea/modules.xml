@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ShoppingCart.iml" filepath="$PROJECT_DIR$/.idea/ShoppingCart.iml" />
+      <module fileurl="file://C:\xampp\htdocs\ShoppingCart\.idea\ShoppingCart.iml" filepath="C:\xampp\htdocs\ShoppingCart\.idea\ShoppingCart.iml" />
     </modules>
   </component>
 </project>

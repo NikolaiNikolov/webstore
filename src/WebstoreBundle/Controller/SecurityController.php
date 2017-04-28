@@ -19,6 +19,11 @@ class SecurityController extends Controller
      */
     public function loginAction()
     {
+        if ($this->getUser())
+        {
+            $this->addFlash('error', 'You are already logged in');
+            return $this->redirectToRoute('shop_index');
+        }
         return $this->render('user/login.html.twig');
     }
 

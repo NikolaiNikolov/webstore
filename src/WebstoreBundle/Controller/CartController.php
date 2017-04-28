@@ -26,7 +26,8 @@ class CartController extends Controller
      */
     public function cart()
     {
-        $carts = $this->getDoctrine()->getRepository(Cart::class)->findAllQuery($this->getUser()->getId());
+        $carts = $this->getDoctrine()->getRepository(Cart::class)
+            ->findAllQuery($this->getUser()->getId());
         $products = array_map(function($p){
             return $p->getProduct();
         }, $carts);
@@ -48,6 +49,7 @@ class CartController extends Controller
 
     /**
      * @Route("cart/add/{id}", name="add_to_cart" )
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Method("POST")
      * @param Product $product
      * @return Response
@@ -123,6 +125,7 @@ class CartController extends Controller
      * @internal param Product $product
      * @Method("POST")
      * @Route("cart/update/{id}", name="update_cart")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function update(Request $request, $id)
     {

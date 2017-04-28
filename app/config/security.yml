@@ -43,7 +43,9 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/editor, roles: [ROLE_ADMIN, ROLE_EDITOR] }
         - { path: ^/products/add, roles: [ROLE_ADMIN, ROLE_EDITOR] }
-        - { path: ^/products/edit, roles: [ROLE_ADMIN, ROLE_EDITOR] }
+        - { path: ^/products/edit, roles: ROLE_ADMIN }
+        - { path: ^/products/delete, roles: ROLE_ADMIN }
+        - { path: ^/category/add, roles: [ROLE_ADMIN, ROLE_EDITOR] }
 
 
 

@@ -2,12 +2,18 @@
 
 {% block content %}
     <div class="container">
-
-        <div class="row">
-        <h1>Market</h1>
+        {% if selected is defined %}
+            {{ selected }}
+        {% endif %}
+        {% if category is defined %}
+            <h1 class="text-center"><strong>{{ category|capitalize }}</strong></h1>
+        {% else %}
+            <h1 class="text-center"><strong>All products</strong></h1>
+        {% endif %}
         <hr>
+        <div class="row">
             <div class="filter">
-            <form METHOD="post">
+            <form name="filter-select" METHOD="post">
                 <div class="form-group">
                     <label class="control-label text-center" for="filter">
                         Sort by:
@@ -18,6 +24,7 @@
                         <option value="2">Name (Z - A)</option>
                         <option value="3">Prize (Low > High)</option>
                         <option value="4">Prize (High > Low)</option>
+
                     </select>
                 </div>
                 <input type="submit" hidden>
@@ -36,16 +43,17 @@
             <div><strong>Quantity: </strong> {{ product.quantity }}</div>
             <div><strong>{{ product.owner.username }}</strong></div>
                 <p><strong>Category: </strong><a href="{{ path('view_category', {id: product.category.id}) }}" target="_blank">{{ product.category }}</a></p>
-
-                {% if app.user.isOwner(product) %}
-                    <a href="{{ path('user_inventory') }}" class="btn btn-info">Inventory</a>
-                {% else %}
-                    <form method="post" action="{{ path('add_to_cart', {id: product.id}) }}">
-                        <input type="submit" class="btn btn-primary" value="Add to cart">
-                    </form>
+                {% if app.user %}
+                    {% if app.user.isOwner(product) %}
+                        <a href="{{ path('user_inventory') }}" class="btn btn-info">Inventory</a>
+                    {% else %}
+                        <form method="post" action="{{ path('add_to_cart', {id: product.id}) }}">
+                            <input type="submit" class="btn btn-primary" value="Add to cart">
+                        </form>
+                    {% endif %}
                 {% endif %}
         </div>
-        {% endfor %}
+            {% endfor %}
         </div>
 
         <div class="navigation">

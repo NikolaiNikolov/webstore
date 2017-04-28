@@ -53,14 +53,22 @@
                             </ul>
                         </li>
                         {% if app.user %}
-                            <li><a href="{{ path('products_add') }}">Add product</a></li>
+                            {% if app.user.isEditor() or app.user.isAdmin() %}
+                                <li><a href="{{ path('products_add') }}">Add product</a></li>
+                            {% endif %}
                         {% endif %}
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
 
                         {% if app.user %}
-                            <li><a href="{{ path('user_cart') }}">
+                            <li>
+                                <a>
+                                    <strong>Balance: </strong> ${{ app.user.balance }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('user_cart') }}">
                                     <img class="user-pic" src="{{ asset('images/icons/cart.png') }}" alt="pic">
                                     <strong>Cart</strong>
                                 </a>

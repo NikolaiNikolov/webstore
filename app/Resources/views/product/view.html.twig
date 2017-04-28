@@ -18,22 +18,31 @@
             </div>
             <div class="col-md-6">
                 {% if app.User() %}
-                    {% if app.User.isAdmin() or app.getUser().isEditor() %}
+                    {% if app.User.isAdmin() %}
                         <form method="post" action="{{ path('product_delete', {id: product.id}) }}">
                             <a class="btn btn-success" href="{{ path('product_edit', {id: product.id}) }}">Edit</a>
                             <input onclick="return confirm('Are you sure you want to delete {{ product.name }}?')" type="submit" class="btn btn-danger" value="Delete">
                         </form>
+                    {% else %}
+                        {% if app.user.isEditor() %}
+                            <a class="btn btn-success" href="{{ path('editor_edit', {id: product.id}) }}">Edit</a>
+                        {% else %}
+                            {% if app.user.isOwner(product) %}
+                                <a class="btn btn-success" href="{{ path('user_edit', {id: product.id}) }}">Edit</a>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
+
                 {% endif %}
                 <h1>{{ product.name }}</h1>
                 <p class="product-description-view">{{ product.description }}</p>
                 <h5><strong>Added on:</strong> {{ product.addedOn|date('d-m-y') }}</h5>
                 <h5><strong>Price:</strong> ${{ product.price }}</h5>
-                <h5><strong>Added by:</strong> {{ product.owner.username }}</h5>
-                <h5><strong>Availability:</strong> {{ product.inStock ? 'In stock' : 'no' }}</h5>
+                <h5><strong>Owner:</strong> {{ product.owner.username }}</h5>
+                <h5><strong>Status:</strong> {{ product.available ? 'On the market' : 'In stash' }}</h5>
                 <h5><strong>Quantity:</strong> {{ product.quantity }}</h5>
 
-                {% if app.User().isOwner(product) %}
+                {% if app.user and app.User().isOwner(product) %}
                 {% else %}
                     <form method="post" action="{{ path('add_to_cart', {id: product.id}) }}">
                         <input type="submit" class="btn btn-primary" value="Add to cart">
@@ -41,8 +50,12 @@
                 {% endif %}
                 </div>
         </div>
+
+        <h1 class="comments">Comments</h1>
+        <hr>
+        {% include 'comment.html.twig' %}
     </div>
 
-    <div style="height: 150px"></div>
+
 {% endblock %}
 

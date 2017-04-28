@@ -46,13 +46,23 @@
                     <div><strong>Quantity: </strong> {{ product.quantity }}</div>
                     <div><strong>Status: </strong> {{ product.isAvailable ? 'For sale' : 'In stash' }}</div>
                     <p><strong>Category: </strong><a href="{{ path('view_category', {id: product.category.id}) }}" target="_blank">{{ product.category }}</a></p>
-                    {#<form method="post" action="{{ path('product_delete', {id: product.id}) }}">#}
-                        {#<a class="btn btn-success" href="{{ path('product_edit', {id: product.id}) }}">Edit</a>#}
-                        {#<input onclick="return confirm('Are you sure you want to delete {{ product.name }}?')" type="submit" class="btn btn-danger" value="Delete">#}
-                    {#</form>#}
-                    <form method="post" action="{{ path('sell_product', {id: product.id}) }}">
-                        <input type="submit" class="btn btn-success" value="Sell product">
-                    </form>
+
+                    {% if app.User() %}
+                        {% if app.User.isAdmin() %}
+                            <form method="post" action="{{ path('product_delete', {id: product.id}) }}">
+                                <a class="btn btn-success" href="{{ path('product_edit', {id: product.id}) }}">Edit</a>
+                                <input onclick="return confirm('Are you sure you want to delete {{ product.name }}?')" type="submit" class="btn btn-danger" value="Delete">
+                            </form>
+                        {% else %}
+                            {% if app.user.isEditor() %}
+                                <a class="btn btn-success" href="{{ path('editor_edit', {id: product.id}) }}">Edit</a>
+                            {% else %}
+                                {% if app.user.isOwner(product) %}
+                                    <a class="btn btn-success" href="{{ path('user_edit', {id: product.id}) }}">Edit</a>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>

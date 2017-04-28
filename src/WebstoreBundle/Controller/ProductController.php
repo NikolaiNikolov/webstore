@@ -12,9 +12,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use WebstoreBundle\Entity\Cart;
+use WebstoreBundle\Entity\Comment;
 use WebstoreBundle\Entity\Product;
-use WebstoreBundle\Form\DeleteButtonType;
+use WebstoreBundle\Form\CommentType;
 use WebstoreBundle\Form\ProductType;
+use WebstoreBundle\Form\UserProductType;
 use WebstoreBundle\Service\SortProducts;
 use WebstoreBundle\Service\UploadPicture;
 
@@ -22,7 +25,7 @@ class ProductController extends Controller
 {
 
     /**
-     * @Route("products/add", name="products_add")
+     * @Route("products/add/", name="products_add")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -32,13 +35,14 @@ class ProductController extends Controller
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
+        $oldPic = $product->getImage();
         if ($form->isSubmitted() && $form->isValid())
         {
             $product->setOwner($this->getUser());
             $product->setAddedOn(new \DateTime());
 
             $uploadService = $this->get('picture_upload');
-            $uploadService->uploadPicture($product);
+            $uploadService->uploadPicture($product, $oldPic);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
@@ -76,110 +80,20 @@ class ProductController extends Controller
      * @param Product $product
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function viewOneAction(Product $product)
+    public function viewOneAction(Request $request, Product $product)
     {
-        return $this->render('product/view.html.twig', ['product' => $product]);
-    }
-
-    public function sellProductAction(Request $request, $id)
-    {
-        /** @var Product $product */
-        $product = $this->getDoctrine()->getRepository(Product::class)->find($id);
-
-        if ($product === null)
-        {
-            $this->redirectToRoute('shop_index');
-        }
-
-        $currentUser = $this->getUser();
-
-        if (!$currentUser->isOwner($product) && !$currentUser->isAdmin())
-        {
-            return $this->redirectToRoute('shop_index');
-        }
-
-        $form = $this->createForm(ProductType::class, $product);
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $this->uploadPicture($product);
-            $product->setAvailable(1);
             $em = $this->getDoctrine()->getManager();
-            $em->persist($product);
+            $em->persist($comment);
             $em->flush();
-
-            return $this->redirectToRoute('product_view', ['id' => $product->getId()]);
         }
 
-        return $this->render('product/sell.html.twig',
-            ['product' => $product, 'form' => $form->createView()]);
-    }
-
-    /**
-     * @param Request $request
-     * @Route("/category/{id}", name="view_category")
-     *
-     */
-    public function viewCategory($id, Request $request)
-    {
-        $paginator = $this->get('knp_paginator');
-        /** @var SortProducts $sort_products */
-        $sort = $this->get('sort_products');
-        $sort = $sort->sort($request);
-
-        $products = $paginator->paginate(
-            $this->getDoctrine()->getRepository(Product::class)->findAllByCategory($id)->orderBy($sort[0], $sort[1]),
-
-            $request->query->getInt('page', 1),
-            $request->query->getInt('limit', 6)
-        );
-
-        return $this->render("product/all.html.twig", ['products' => $products, ]);
-    }
-
-    /**
-     * @Route("/products/edit/{id}", name="product_edit")
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
-     *
-     * @param $id
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function edit($id, Request $request)
-    {
-        $repo = $this->getDoctrine()->getRepository(Product::class);
-        $product = $repo->find($id);
-
-        if (is_null($product))
-        {
-            return $this->redirectToRoute('shop_index');
-        }
-
-        $currentUser = $this->getUser();
-
-        if (!$currentUser->isOwner($product) && !$currentUser->isAdmin())
-        {
-            return $this->redirectToRoute('shop_index');
-        }
-
-        $form = $this->createForm(ProductType::class, $product);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid())
-        {
-            $uploadService = $this->get('picture_upload');
-            $uploadService->uploadPicture($product);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($product);
-            $em->flush();
-
-            return $this->redirectToRoute('product_view', ['id' => $product->getId()]);
-        }
-
-        return $this->render('product/edit.html.twig',
-            ['product' => $product, 'form' => $form->createView(), 'id' => $product->getId()]);
+        return $this->render('product/view.html.twig', ['product' => $product, 'form' => $form->createView()]);
     }
 
     /**
@@ -187,6 +101,7 @@ class ProductController extends Controller
      * @Route("products/delete/{id}", name="product_delete")
      * @param Product $product
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function delete(Product $product)
     {
@@ -196,21 +111,33 @@ class ProductController extends Controller
         }
 
         $currentUser = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $cartRepo = $em->getRepository(Cart::class);
+        $productInCarts = $cartRepo->findBy(['product' => $product]);
 
-        if (!$currentUser->isOwner($product) && !$currentUser->isAdmin())
-        {
-            $this->addFlash('error', "You don't have authorization to delete this product!");
-            return $this->redirectToRoute("products_all");
+        //remove from other people's carts before deleting
+        foreach ($productInCarts as $productInCart) {
+            $em->remove($productInCart);
+            $em->flush();
         }
-
+        unlink($product->getImage());
         $em = $this->getDoctrine()->getManager();
         $em->remove($product);
         $em->flush();
         $this->addFlash('notice', "You deleted " . $product->getName() . " successfully!");
 
-        return $this->redirectToRoute('user_inventory');
+        return $this->redirectToRoute('products_all');
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("comment/add/", name="add_comment")
+     */
+    public function addComment(Request $request)
+    {
+        return $this->render('comment.html.twig', ['form' => $form->createView()]);
+    }
 
     /**
      * @Route("products/sell/{id}", name="sell_product")
