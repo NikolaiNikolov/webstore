@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <div class="col-md-8">
+        <section>
+            <!--for demo wrap-->
+            <h1>Promotions</h1>
+            <div class="table-responsive">
+
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Percent</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                        <th>Category</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for promotion in promotions %}
+                        <tr>
+                            <td>{{ promotion.percent }}%</td>
+                            <td>{{ promotion.getStartDate|date('d-m-y h:m:s') }}</td>
+                            <td>{{ promotion.getEndDate|date('d-m-y h:m:s') }}</td>
+                            <td>{{ promotion.category is null ? 'Global promotion' : promotion.category }}</td>
+                            <td>
+                                <a href="{{ path('edit_promotion', {id: promotion.id}) }}" class="btn btn-success">Edit</a>
+                            </td>
+                            <td>
+                                <form method="post" action="{{ path('delete_promotion', {id: promotion.id}) }}">
+                                    <input type="submit" class="btn btn-danger" value="Delete">
+                                </form>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="fill"></div>
+        </section>
+        </div>
+    </div>
+{% endblock %}
+

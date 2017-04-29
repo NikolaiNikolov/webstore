@@ -2,15 +2,8 @@
 
 {% block content %}
     <div class="container">
-
-    {#<div class="col-md-4 center-block">#}
-        {#<img class="product-image" src="{{ asset(product.image) }}" alt="">#}
-        {#<h1><strong>{{ product.name }}</strong></h1>#}
-        {#<div><strong>Description: </strong><br>{{ product.description }}</div>#}
-        {#<p><strong>Price: </strong>{{ product.price }}</p>#}
-        {#<p><strong>Quantity: </strong>{{ product.quantity }}</p>#}
-        {#<p><strong>Date: </strong>{{ product.addedOn|date('d-m-y') }}</p>#}
-        {#<p><strong>Owner: </strong>{{ product.owner.username }}</p>#}
+        {% set product_promotion = calc.calculate(product)['price'] %}
+        {% set percent = calc.calculate(product)['promotion'] %}
 
         <div class="row product-info">
             <div class="col-md-6">
@@ -28,16 +21,22 @@
                             <a class="btn btn-success" href="{{ path('editor_edit', {id: product.id}) }}">Edit</a>
                         {% else %}
                             {% if app.user.isOwner(product) %}
-                                <a class="btn btn-success" href="{{ path('user_edit', {id: product.id}) }}">Edit</a>
+                                <a class="btn btn-success" href="{{ path('profile_edit', {id: product.id}) }}">Edit</a>
                             {% endif %}
                         {% endif %}
                     {% endif %}
 
                 {% endif %}
+
                 <h1>{{ product.name }}</h1>
                 <p class="product-description-view">{{ product.description }}</p>
                 <h5><strong>Added on:</strong> {{ product.addedOn|date('d-m-y') }}</h5>
-                <h5><strong>Price:</strong> ${{ product.price }}</h5>
+                <strong>Price: </strong>
+                {% if product_promotion != product.price %}
+                    <div class="ribbon-wrapper-green"><div class="ribbon-green">{{ percent }}% OFF</div></div>
+                    <del>${{ product.price }}</del>
+                {% endif %}
+                ${{ product_promotion|number_format(2) }}
                 <h5><strong>Owner:</strong> {{ product.owner.username }}</h5>
                 <h5><strong>Status:</strong> {{ product.available ? 'On the market' : 'In stash' }}</h5>
                 <h5><strong>Quantity:</strong> {{ product.quantity }}</h5>

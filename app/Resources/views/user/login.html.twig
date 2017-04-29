@@ -2,31 +2,32 @@
 
 {% block content %}
     <div class="container">
+        {% set has_error = '' %}
         <div class="col-md-4 col-md-offset-4">
-
-    <form name="authenticate" action="{{ path('security_login') }}" method="post">
-
-            <!-- Text input-->
-            <div class="form-group">
-                <label class="control-label required" for="_username">Username</label>
-                <div class="input-group">
-                    <input name="_username" type="text" placeholder="username" class="form-control" value="nakov">
+            {% if error %}
+                <div class="alert alert-danger">
+                    Invalid credentials!
                 </div>
-            </div>
+                {% set has_error = 'has-error' %}
+            {% endif %}
+            <form name="authenticate" action="{{ path('security_login') }}" method="post">
 
-            <!-- Password input-->
-            <div class="form-group">
-                <label class="control-label required" for="_password">Password</label>
-                <div class="input-group">
-                    <input name="_password" type="password" placeholder="password" class="form-control input-md" value="123">
+                <!-- Text input-->
+                <div class="form-group {{ has_error }}">
+                    <label class="control-label required" for="_username">Username</label>
+                        <input name="_username" type="text" placeholder="username" class="form-control">
                 </div>
-            </div>
 
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-            <button type="submit" class="btn btn-primary">Login</button>
-
-
-    </form>
+                <!-- Password input-->
+                <div class="form-group {{ has_error }}">
+                    <label class="control-label required" for="_password">Password</label>
+                        <input name="_password" type="password" placeholder="password" class="form-control input-md">
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
         </div>
     </div>
+
+    <div class="fill"></div>
 {% endblock %}

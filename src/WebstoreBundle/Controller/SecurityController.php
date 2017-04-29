@@ -22,7 +22,17 @@ class SecurityController extends Controller
             $this->addFlash('error', 'You are already logged in');
             return $this->redirectToRoute('shop_index');
         }
-        return $this->render('user/login.html.twig');
+
+        $authenticationUtils = $this->get('security.authentication_utils');
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+
+        return $this->render('user/login.html.twig', ['error' => $error]);
     }
 
     /**
@@ -64,7 +74,7 @@ class SecurityController extends Controller
             $roleRepository = $this->getDoctrine()->getRepository(Role::class);
             $userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
             $user->addRole($userRole);
-
+            $user->setImage('images/users/profile-pics/default.jpg');
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();

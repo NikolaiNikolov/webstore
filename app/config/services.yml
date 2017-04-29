@@ -27,3 +27,6 @@ services:
     price_calculator:
         class: WebstoreBundle\Service\PriceCalculator
         arguments: ['@promotion_manager']
+    app.security.access_denied_handler:
+        class: WebstoreBundle\Security\AccessDeniedHandler
+

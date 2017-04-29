@@ -2,12 +2,14 @@
 
 namespace WebstoreBundle\Controller;
 
+use Doctrine\ORM\NoResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use WebstoreBundle\Entity\Cart;
 use WebstoreBundle\Entity\Product;
 use WebstoreBundle\Entity\Transaction;
@@ -29,17 +31,20 @@ class CartController extends Controller
         }, $carts);
         $total = 0;
 
+        $calc = $this->get('price_calculator');
+        $max_promotion = $this->get('promotion_manager')->getGeneralPromotion();
+
         foreach ($carts as $cart) {
             /** @var Cart $cartProduct */
             $cartProduct = $cart;
-            $productPrice = $cartProduct->getProduct()->getPrice();
+            $productPrice = $calc->calculate($cartProduct->getProduct())['price'];
             $total += $cart->getQuantity() * $productPrice;
         }
 
-
-//        $total = array_sum(array_map(function ($a) {return $a->getProduct()->getPrice();}, $products));
-
-        return $this->render('cart/cart.html.twig', ['products' => $carts, 'total' => $total]);
+        return $this->render('cart/cart.html.twig',
+            ['products' => $carts, 'total' => $total,
+            'max_promotion' => $max_promotion,
+                'calc' => $calc]);
     }
 
     /**
@@ -157,15 +162,18 @@ class CartController extends Controller
             $repo = $this->getDoctrine()->getRepository(Product::class);
             $product = $repo->find($cartProduct);
             $requestedQuantity = $items->getQuantity();
-            //initialize transaction
-            $transaction = new Transaction($product, $this->getUser(), $em, $requestedQuantity);
 
-//            try {
-            $transaction->initTransaction();
-//            } catch (\Exception $exception) {
-//                $this->addFlash('error', $exception);
-//                return $this->redirectToRoute('user_cart');
-//            }
+            $calc = $this->get('price_calculator');
+            $max_promotion = $this->get('promotion_manager')->getGeneralPromotion();
+
+            //initialize transaction
+            try {
+                $transaction = new Transaction($calc, $product, $this->getUser(), $em, $requestedQuantity);
+                $transaction->initTransaction();
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+                return $this->redirectToRoute('user_cart');
+            }
 
         }
         return $this->redirectToRoute('user_inventory');

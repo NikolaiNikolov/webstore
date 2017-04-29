@@ -34,9 +34,9 @@ class ProductController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $product->setOwner($this->getUser());
             $product->setAddedOn(new \DateTime());
-
+            $imgPath = 'images/products/';
             $uploadService = $this->get('picture_upload');
-            $uploadService->uploadPicture($product, $oldPic);
+            $uploadService->uploadPicture($product, $oldPic, $imgPath);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
@@ -73,7 +73,7 @@ class ProductController extends Controller
 
 
     /**
-     * @Route("products/view/{id}", name="product_view")
+     * @Route("products/view/{id}/", name="product_view")
      * @param Product $product
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -83,13 +83,21 @@ class ProductController extends Controller
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
+        $calc = $this->get('price_calculator');
+        $max_promotion = $this->get('promotion_manager')->getGeneralPromotion();
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
             $em->flush();
         }
 
-        return $this->render('product/view.html.twig', ['product' => $product, 'form' => $form->createView()]);
+        return $this->render('product/view.html.twig',
+            ['product' => $product,
+            'form' => $form->createView(),
+                'max_promotion' => $max_promotion,
+                'calc' => $calc
+            ]);
     }
 
     /**
@@ -116,7 +124,6 @@ class ProductController extends Controller
             $em->remove($productInCart);
             $em->flush();
         }
-        unlink($product->getImage());
         $em = $this->getDoctrine()->getManager();
         $em->remove($product);
         $em->flush();

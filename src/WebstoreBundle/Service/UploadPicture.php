@@ -16,21 +16,21 @@ class UploadPicture
         $this->kernel = $kernel;
     }
 
-    public function uploadPicture(Product $product, $oldPic)
+    public function uploadPicture($product, string $oldPic, string $path)
     {
         /** @var UploadedFile $file */
         $file = $product->getImage();
+
         $currentDate = new DateTime('now');
         if ($file) {
-            $path = '/../web/images/products/';
-            $filename = md5($product->getName() . '' . $product->getAddedOn()->format('Y-m-d H:i:s') .
-                $product->getOwner()->getFirstName()
+            $imgPath = '/../web/' . $path;
 
-                . $currentDate->format('s'));
+            $filename = md5( uniqid() . $currentDate->format('s'));
+
             $file->move(
-                $this->kernel->getRootDir() . $path,
+                $this->kernel->getRootDir() . $imgPath,
                 $filename . '.png');
-            $product->setImage('images/products/' . $filename . '.png');
+            $product->setImage($path . $filename . '.png');
         } else {
             $product->setImage($oldPic);
         }

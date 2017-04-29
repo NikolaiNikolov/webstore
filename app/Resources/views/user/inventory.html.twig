@@ -28,21 +28,30 @@
             {% if products is empty %}
                 <div>
                     <h1>Your inventory is empty</h1>
-                    <p>Head to the<a href="{{ path('products_all') }}"> marketplace</a> to buy products
-                        or <a href="{{ path('products_add') }}">add a new product</a>.</p>
-                </div>
+                    <p>Head to the<a href="{{ path('products_all') }}"> marketplace</a> to buy products.</div>
+                <div class="fill"></div>
             {% endif %}
 
             {% for product in products %}
+                {% set product_promotion = calc.calculate(product)['price'] %}
+                {% set percent = calc.calculate(product)['promotion'] %}
+
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 product">
 
-                    <h3><a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">
-                            <img class="product-image" src="{{ asset(product.image) }}" alt="{{ product.name }}">
-
-                            {{ product.name }}</a>
+                    <h3>
+                        <a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">
+                            <img class="product-image" src="{{ asset(product.image) }}"
+                                 alt="{{ product.name }}">
+                        </a>
                     </h3>
+                    <p class="product-name">{{ product.name|striptags|slice(0, 25) }}
+
                     <div class="product-description">{{ product.summary }}</div>
-                    <div><strong>Price: </strong>${{ product.price }}</div>
+                    {% if product_promotion != product.price %}
+                        <div class="ribbon-wrapper-green"><div class="ribbon-green">{{ percent }}% OFF</div></div>
+                        <del>${{ product.price }}</del>
+                    {% endif %}
+                    ${{ product_promotion|number_format(2) }}
                     <div><strong>Quantity: </strong> {{ product.quantity }}</div>
                     <div><strong>Status: </strong> {{ product.isAvailable ? 'For sale' : 'In stash' }}</div>
                     <p><strong>Category: </strong><a href="{{ path('view_category', {id: product.category.id}) }}" target="_blank">{{ product.category }}</a></p>

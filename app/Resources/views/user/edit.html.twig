@@ -5,10 +5,11 @@
         <div class="col-md-4 col-md-offset-4">
             {{ form_start(form) }}
             {{ form_widget(form) }}
-
-            <button class="btn btn-primary" type="submit" formnovalidate>Add category</button>
+            <button class="btn btn-primary" type="submit" formnovalidate>Save changes</button>
+            <a class="btn btn-warning" href="{{ path('view_profile') }}">Back to profile</a>
             {{ form_end(form) }}
         </div>
-        <div class="fill"></div>
+        <div class="fill">
+        </div>
     </div>
 {% endblock %}

@@ -19,7 +19,6 @@ class PriceCalculator
     /**
      * @param Product $product
      *
-     * @return float
      */
     public function calculate($product)
     {
@@ -27,14 +26,19 @@ class PriceCalculator
         $category_id = $category->getId();
 
         $promotion = $this->manager->getGeneralPromotion();
+
         if($this->manager->hasCategoryPromotion($category)){
-            $promotion = $this->manager->getCategoryPromotion($category);
+            if ($this->manager->getCategoryPromotion($category) > $promotion)
+            {
+                $promotion = $this->manager->getCategoryPromotion($category);
+            }
         }
 
         if(isset($this->category_promotions[$category_id])){
             $promotion = $this->category_promotions[$category_id];
         }
-
-        return $product->getPrice() - $product->getPrice() * ($promotion / 100);
+        $result = ['price' => $product->getPrice() - $product->getPrice() * ($promotion / 100), 'promotion' => $promotion];
+        return $result;
     }
+
 }

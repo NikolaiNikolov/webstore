@@ -9,3 +9,7 @@ $(document).ready(function() {
         $form.find('input[type=submit]').click();
     });
 });
+
+jQuery(document).ready(function() {
+    $('.js-datepicker').datepicker();
+});

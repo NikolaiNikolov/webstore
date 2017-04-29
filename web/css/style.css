@@ -8,48 +8,6 @@ html * {
     font-family: 'Raleway', sans-serif;
 }
 
-
-
-/*table{*/
-/*width:100%;*/
-/*table-layout: fixed;*/
-/*}*/
-/*.tbl-header{*/
-/*background-color: rgba(255,255,255,0.3);*/
-/*}*/
-/*.tbl-content{*/
-/*height:300px;*/
-/*overflow-x:auto;*/
-/*margin-top: 0px;*/
-/*border: 1px solid rgba(255,255,255,0.3);*/
-/*}*/
-/*th{*/
-/*padding: 20px 15px;*/
-/*text-align: left;*/
-/*font-weight: 500;*/
-/*font-size: 12px;*/
-/*color: #fff;*/
-/*text-transform: uppercase;*/
-/*}*/
-/*td{*/
-/*padding: 15px;*/
-/*text-align: left;*/
-/*vertical-align:middle;*/
-/*font-weight: 300;*/
-/*font-size: 12px;*/
-/*color: #fff;*/
-/*border-bottom: solid 1px rgba(255,255,255,0.1);*/
-/*}*/
-
-/*@import url(http://fonts.googleapis.com/css?family=Roboto:400,500,300,700);*/
-/*table {*/
-/*background: -webkit-linear-gradient(left, #25c481, #25b7c4);*/
-/*background: linear-gradient(to right, #25c481, #25b7c4);*/
-/*font-family: 'Roboto', sans-serif;*/
-/*}*/
-
-/*for custom scrollbar for webkit browser*/
-
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -195,8 +153,6 @@ a:hover {
         display: inline-block; width: 8rem;
     }
 
-
-
     table#cart tfoot td{display:block; }
     table#cart tfoot td .btn{display:block;}
 
@@ -210,6 +166,29 @@ a:hover {
     margin-top: 40px;
 }
 
+.profile-pic {
+    border-radius: 2em;
+    width: 90%;
+    height: 400px;
+    object-fit: contain;
+}
+
+.profile-description {
+    font-size: 25px;
+}
+
 footer {
     margin-top: 50px;
+}
+
+.fill {
+    height: 470px;
+}
+
+.product-name {
+    font-size: 25px;
+    height: 40px;
+    white-space: pre-line;
+    overflow: auto;
+    word-wrap: break-word;
 }

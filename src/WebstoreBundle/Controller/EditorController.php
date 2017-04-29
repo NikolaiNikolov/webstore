@@ -2,17 +2,24 @@
 
 namespace WebstoreBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use WebstoreBundle\Entity\Product;
+use WebstoreBundle\Entity\Promotion;
 use WebstoreBundle\Form\EditorProductType;
+use WebstoreBundle\Form\PromotionType;
 
+/**
+ * Class EditorController
+ * @package WebstoreBundle\Controller
+ * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+ */
 class EditorController extends Controller
 {
     /**
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Route("editor/products/edit/{id}/", name="editor_edit")
      */
     public function edit(Product $product, Request $request)
@@ -33,4 +40,5 @@ class EditorController extends Controller
 
         return $this->render('product/edit_editor.html.twig', ['form' => $form->createView()]);
     }
+
 }

@@ -38,6 +38,7 @@ security:
                 path: security_logout
                 # The name of the route to redirect to after logging out
                 target: shop_index
+            access_denied_handler: app.security.access_denied_handler
 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
@@ -46,6 +47,7 @@ security:
         - { path: ^/products/edit, roles: ROLE_ADMIN }
         - { path: ^/products/delete, roles: ROLE_ADMIN }
         - { path: ^/category/add, roles: [ROLE_ADMIN, ROLE_EDITOR] }
+        - { path: ^/promotions, roles: [ROLE_ADMIN, ROLE_EDITOR] }
 
 
 

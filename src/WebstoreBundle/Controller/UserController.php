@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use WebstoreBundle\Entity\Product;
 use WebstoreBundle\Entity\User;
+use WebstoreBundle\Form\EditUserType;
 use WebstoreBundle\Form\UserProductType;
 
 class UserController extends Controller
@@ -53,5 +54,42 @@ class UserController extends Controller
         }
 
         return $this->render('product/user_edit.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("profile", name="view_profile")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     */
+    public function viewProfile()
+    {
+        return $this->render('user/profile.html.twig');
+    }
+
+    /**
+     * @Route("profile/edit", name="profile_edit")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     */
+    public function userEdit(Request $request)
+    {
+        $repo = $this->getDoctrine()->getManager()->getRepository(User::class);
+        $user = $repo->find($this->getUser());
+        $oldPic = $user->getImage();
+        $form = $this->createForm(EditUserType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $imgPath = 'images/users/profile-pics/';
+            $uploadService = $this->get('picture_upload');
+            $uploadService->uploadPicture($user, $oldPic, $imgPath);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash('notice', 'Profile edited successfully!');
+            return $this->redirectToRoute('view_profile');
+        }
+
+        return $this->render('user/edit.html.twig', ['form' => $form->createView()]);
     }
 }

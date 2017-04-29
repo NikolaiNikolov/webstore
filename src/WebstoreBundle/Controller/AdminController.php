@@ -7,14 +7,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use WebstoreBundle\Entity\Product;
+use WebstoreBundle\Form\ProductEditType;
 use WebstoreBundle\Form\ProductType;
 
 class AdminController extends Controller
 {
     /**
-     * @Route("/products/edit/{id}", name="product_edit")
+     * @Route("/products/edit/{id}/", name="product_edit")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
-     *
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -25,19 +25,16 @@ class AdminController extends Controller
         $repo = $this->getDoctrine()->getRepository(Product::class);
         $product = $repo->find($product);
 
-//        if (is_null($product))
-//        {
-//            return $this->redirectToRoute('shop_index');
-//        }
         $oldPic = $product->getImage();
 
-        $form = $this->createForm(ProductType::class, $product);
+        $form = $this->createForm(ProductEditType::class, $product);
         $form->handleRequest($request);
         $form->getData();
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imgPath = 'images/products/';
             $uploadService = $this->get('picture_upload');
-            $uploadService->uploadPicture($product, $oldPic);
+            $uploadService->uploadPicture($product, $oldPic, $imgPath);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);

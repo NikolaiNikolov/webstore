@@ -13,7 +13,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use WebstoreBundle\Entity\Product;
 
-class ProductType extends AbstractType
+class ProductEditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -32,7 +32,7 @@ class ProductType extends AbstractType
                 ])
             ->add('price', MoneyType::class,
                 [
-                    'currency' => 'USD'
+                    'currency' => 'BGN'
                 ])
             ->add('quantity', IntegerType::class)
             ->add('category',
@@ -56,7 +56,7 @@ class ProductType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => Product::class,
-                'validation_groups' => ['Default', 'ProductCreate']
+                'validation_groups' => ['Default', 'ProductEditType']
             ]);
     }
 

@@ -10,6 +10,8 @@
         <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap-theme.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/wrapper.css') }}">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css">
 
         <script src="{{ asset('js/jquery-3.2.0.min.js') }}"></script>
     {% endblock %}
@@ -50,11 +52,17 @@
                                 {% for category in categories.categories %}
                                     <li><a href="{{ path('view_category', {id: category.id}) }}">{{ category.name|capitalize }}</a></li>
                                 {% endfor %}
+                                {% if app.user %}
+                                    {% if app.user.isAdmin or app.user.isEditor %}
+                                        <li><a href="{{ path('add_category') }}">Add category</a></li>
+                                    {% endif %}
+                                {% endif %}
                             </ul>
                         </li>
                         {% if app.user %}
                             {% if app.user.isEditor() or app.user.isAdmin() %}
                                 <li><a href="{{ path('products_add') }}">Add product</a></li>
+                                <li><a href="{{ path('add_promotion') }}">Add promotion</a></li>
                             {% endif %}
                         {% endif %}
                     </ul>
@@ -64,7 +72,7 @@
                         {% if app.user %}
                             <li>
                                 <a>
-                                    <strong>Balance: </strong> ${{ app.user.balance }}
+                                    <strong>Balance: </strong> ${{ app.user.balance|number_format(2, '.') }}
                                 </a>
                             </li>
                             <li>
@@ -76,12 +84,12 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <strong>{{ app.user.username }}</strong>
-                                <img class="user-pic" src="http://newtrend.bg/wp-content/uploads/2012/12/svetlin_nakov-e1355764014661.jpg" alt="pic">
+                                <img class="user-pic" src="{{ asset(app.user.image) }}" alt="pic">
                                 <span class="caret"></span>
                             </a>
 
                             <ul class="dropdown-menu">
-                                <li><a href="#">Profile</a></li>
+                                <li><a href="{{ path('view_profile') }}">Profile</a></li>
                                 <li><a href="{{ path('user_inventory') }}">Inventory</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{{ path('security_logout') }}">Log out</a></li>
@@ -134,7 +142,7 @@
 {% block javascripts %}
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/scripts.js') }}"></script>
-    <script src="{{ asset('js/npm.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css"></script>
 {% endblock %}
 </html>
 

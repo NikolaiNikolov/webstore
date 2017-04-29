@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img class="profile-pic center-block" src="{{ asset(app.user.image) }}" alt="">
+            </div>
+            <div class="col-md-6 profile-description">
+                <h1>{{ app.user.getFirstName }} {{ app.user.getLastName }}</h1>
+                <strong>Balance:</strong> $<span style="color: green">{{ app.user.balance|number_format(2, '.') }}</span>
+                <br>
+                <strong>Role: </strong>
+                {{ app.user.isAdmin() ? 'Admin' : app.user.isEditor() ? 'Editor' : 'User' }}
+                <br>
+                <a class="btn btn-info" href="{{ path('user_inventory') }}">Inventory</a>
+
+                <a class="btn btn-success" href="{{ path('profile_edit') }}">Edit</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

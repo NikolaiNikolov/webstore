@@ -4,6 +4,7 @@ namespace WebstoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -11,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * User
  *
  * @ORM\Table(name="users")
+ * @UniqueEntity("username", message="This username is already taken")
  * @ORM\Entity(repositoryClass="WebstoreBundle\Repository\UserRepository")
  */
 class User implements UserInterface
@@ -26,14 +28,26 @@ class User implements UserInterface
 
     /**
      * @var string
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Please enter a username")
+     * @Assert\Length(
+     *     min = 3,
+     *     minMessage="Username can't be shorter than {{ limit }} symbols",
+     *     max = 200,
+     *     maxMessage="Username can't be longer than {{ limit }} symbols"
+     * )
      * @ORM\Column(name="username", type="string", length=50, unique=true)
      */
     private $username;
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank(message="Please enter a password")
+     * @Assert\Length(
+     *     min = 3,
+     *     minMessage="Password can't be shorter than {{ limit }} symbols",
+     *     max = 200,
+     *     maxMessage="Password can't be longer than {{ limit }} symbols"
+     * )
      * @ORM\Column(name="password", type="string", length=100)
      */
     private $password;
@@ -41,6 +55,12 @@ class User implements UserInterface
     /**
      * @var string
      * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min = 3,
+     *     minMessage="First name can't be shorter than {{ limit }} symbols",
+     *     max = 200,
+     *     maxMessage="First name can't be longer than {{ limit }} symbols"
+     * )
      * @ORM\Column(name="firstName", type="string", length=255, options={"default" : 0})
      */
     private $firstName;
@@ -48,6 +68,12 @@ class User implements UserInterface
     /**
      * @var string
      * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min = 3,
+     *     minMessage="Last name can't be shorter than {{ limit }} symbols",
+     *     max = 200,
+     *     maxMessage="Last name can't be longer than {{ limit }} symbols"
+     * )
      * @ORM\Column(name="lastName", type="string", length=255)
      */
     private $lastName;
@@ -56,7 +82,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="balance", type="decimal", precision=10, scale=2)
      */
-    private $balance = 100.00;
+    private $balance = 10000.00;
     /**
      * @var ArrayCollection
      *
@@ -73,6 +99,12 @@ class User implements UserInterface
      *     )
      */
     private $roles;
+
+    /**
+     * @var string
+     * @ORM\Column(name="image", type="string", length=255)
+     */
+    private $image;
 
     public function __construct()
     {
@@ -300,6 +332,29 @@ class User implements UserInterface
     public function isEditor()
     {
         return in_array("ROLE_EDITOR", $this->getRoles());
+    }
+
+    /**
+     * Get image
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Set image
+     *
+     * @param string $image
+     *
+     * @return User
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
     }
 }
 
