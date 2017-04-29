@@ -2,24 +2,19 @@
 
 namespace WebstoreBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use WebstoreBundle\Entity\Cart;
 use WebstoreBundle\Entity\Comment;
 use WebstoreBundle\Entity\Product;
+use WebstoreBundle\Entity\Promotion;
 use WebstoreBundle\Form\CommentType;
 use WebstoreBundle\Form\ProductType;
-use WebstoreBundle\Form\UserProductType;
 use WebstoreBundle\Service\SortProducts;
-use WebstoreBundle\Service\UploadPicture;
 
 class ProductController extends Controller
 {
@@ -36,8 +31,7 @@ class ProductController extends Controller
         $form->handleRequest($request);
 
         $oldPic = $product->getImage();
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $product->setOwner($this->getUser());
             $product->setAddedOn(new \DateTime());
 
@@ -65,13 +59,18 @@ class ProductController extends Controller
         $sort = $this->get('sort_products');
         $sort = $sort->sort($request);
 
+        $calc = $this->get('price_calculator');
+        $max_promotion = $this->getDoctrine()
+            ->getRepository(Promotion::class)
+            ->fetchBiggestPromotion();
+
         $products = $paginator->paginate(
             $this->getDoctrine()->getRepository(Product::class)->findAllAvailableQuery()->orderBy($sort[0], $sort[1]),
             $request->query->getInt('page', 1),
             $request->query->getInt('limit', 6)
         );
 
-        return $this->render("product/all.html.twig", ['products' => $products]);
+        return $this->render("product/all.html.twig", ['products' => $products, 'max_promotion' => $max_promotion, 'calc' => $calc]);
     }
 
 
@@ -86,8 +85,7 @@ class ProductController extends Controller
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
             $em->flush();

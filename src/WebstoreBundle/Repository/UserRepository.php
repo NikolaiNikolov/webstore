@@ -2,8 +2,6 @@
 
 namespace WebstoreBundle\Repository;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
-
 /**
  * UserRepository
  *

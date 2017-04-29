@@ -2,13 +2,11 @@
 
 namespace WebstoreBundle\Form;
 
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,7 +19,6 @@ class ProductType extends AbstractType
     {
         $builder
             ->add('name', TextType::class)
-
             ->add('description', TextareaType::class)
             ->add('image', FileType::class,
                 [
@@ -38,7 +35,6 @@ class ProductType extends AbstractType
                     'currency' => 'BGN'
                 ])
             ->add('quantity', IntegerType::class)
-
             ->add('category',
                 null,
                 [

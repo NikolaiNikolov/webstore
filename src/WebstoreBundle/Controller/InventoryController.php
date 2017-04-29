@@ -1,12 +1,12 @@
 <?php
 
 namespace WebstoreBundle\Controller;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use WebstoreBundle\Entity\Product;
-use WebstoreBundle\Entity\User;
 use WebstoreBundle\Service\SortProducts;
 
 class InventoryController extends Controller

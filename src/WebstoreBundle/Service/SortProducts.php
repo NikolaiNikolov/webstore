@@ -1,4 +1,5 @@
 <?php
+
 namespace WebstoreBundle\Service;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -11,8 +12,7 @@ class SortProducts
         $filter = $request->get('filter');
         $sort = ['a.id', 'desc'];
 
-        if ($filter)
-        {
+        if ($filter) {
             switch ($filter) {
                 case 1:
                     $sort = ['a.name', 'asc'];

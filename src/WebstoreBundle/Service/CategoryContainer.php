@@ -1,4 +1,5 @@
 <?php
+
 namespace WebstoreBundle\Service;
 
 use Doctrine\ORM\EntityManager;

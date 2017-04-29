@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="container">
+        {{ max_promotion }}
         {% if selected is defined %}
             {{ selected }}
         {% endif %}
@@ -13,46 +14,52 @@
         <hr>
         <div class="row">
             <div class="filter">
-            <form name="filter-select" METHOD="post">
-                <div class="form-group">
-                    <label class="control-label text-center" for="filter">
-                        Sort by:
-                    </label>
-                    <select class="form-control" name="filter" id="filter">
-                        <option value="0">Default</option>
-                        <option value="1">Name (A - Z)</option>
-                        <option value="2">Name (Z - A)</option>
-                        <option value="3">Prize (Low > High)</option>
-                        <option value="4">Prize (High > Low)</option>
-
-                    </select>
-                </div>
-                <input type="submit" hidden>
-            </form>
+                <form name="filter-select" METHOD="post">
+                    <div class="form-group">
+                        <label class="control-label text-center" for="filter">
+                            Sort by:
+                        </label>
+                        <select class="form-control" name="filter" id="filter">
+                            <option value="0">Default</option>
+                            <option value="1">Name (A - Z)</option>
+                            <option value="2">Name (Z - A)</option>
+                            <option value="3">Prize (Low > High)</option>
+                            <option value="4">Prize (High > Low)</option>
+                        </select>
+                    </div>
+                    <input type="submit" hidden>
+                </form>
             </div>
 
             {% for product in products %}
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 product">
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 product">
 
-                <h3><a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">
-                        <img class="product-image" src="{{ asset(product.image) }}" alt="{{ product.name }}">
-                        {{ product.name }}</a>
-            </h3>
-            <div class="product-description">{{ product.summary }}</div>
-            <div><strong>Price: </strong>${{ product.price }}</div>
-            <div><strong>Quantity: </strong> {{ product.quantity }}</div>
-            <div><strong>{{ product.owner.username }}</strong></div>
-                <p><strong>Category: </strong><a href="{{ path('view_category', {id: product.category.id}) }}" target="_blank">{{ product.category }}</a></p>
-                {% if app.user %}
-                    {% if app.user.isOwner(product) %}
-                        <a href="{{ path('user_inventory') }}" class="btn btn-info">Inventory</a>
-                    {% else %}
-                        <form method="post" action="{{ path('add_to_cart', {id: product.id}) }}">
-                            <input type="submit" class="btn btn-primary" value="Add to cart">
-                        </form>
+                    <h3><a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">
+                            <img class="product-image" src="{{ asset(product.image) }}" alt="{{ product.name }}">
+                            {{ product.name }}</a>
+                    </h3>
+                    <div class="product-description">{{ product.summary }}</div>
+                    {% set product_promotion = calc.calculate(product) %}
+
+                    {% if product_promotion != product.price %}
+                        <strong>Price: </strong>
+                        <del>${{ product.price }}</del>
                     {% endif %}
-                {% endif %}
-        </div>
+                    ${{ product_promotion|number_format(2) }}
+                    <div><strong>Quantity: </strong> {{ product.quantity }}</div>
+                    <div><strong>{{ product.owner.username }}</strong></div>
+                    <p><strong>Category: </strong><a href="{{ path('view_category', {id: product.category.id}) }}"
+                                                     target="_blank">{{ product.category }}</a></p>
+                    {% if app.user %}
+                        {% if app.user.isOwner(product) %}
+                            <a href="{{ path('user_inventory') }}" class="btn btn-info">Inventory</a>
+                        {% else %}
+                            <form method="post" action="{{ path('add_to_cart', {id: product.id}) }}">
+                                <input type="submit" class="btn btn-primary" value="Add to cart">
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </div>
             {% endfor %}
         </div>
 

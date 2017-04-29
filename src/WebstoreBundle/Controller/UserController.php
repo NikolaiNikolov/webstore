@@ -35,8 +35,7 @@ class UserController extends Controller
         $repo = $this->getDoctrine()->getManager()->getRepository(Product::class);
         $product = $repo->find($product);
 
-        if ($product->getOwner() != $this->getUser() && !$this->getUser()->isEditor() && !$this->getUser()->isAdmin())
-        {
+        if ($product->getOwner() != $this->getUser() && !$this->getUser()->isEditor() && !$this->getUser()->isAdmin()) {
             $this->addFlash('error', 'You don\'t have authorization to edit this product');
             return $this->redirectToRoute('product_view', ['id' => $product->getId()]);
         }
@@ -45,8 +44,7 @@ class UserController extends Controller
         $form = $this->createForm(UserProductType::class, $product);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
             $em->flush();
@@ -55,4 +53,5 @@ class UserController extends Controller
         }
 
         return $this->render('product/user_edit.html.twig', ['form' => $form->createView()]);
-    }}
+    }
+}

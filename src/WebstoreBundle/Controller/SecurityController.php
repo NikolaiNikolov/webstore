@@ -3,7 +3,6 @@
 namespace WebstoreBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -19,8 +18,7 @@ class SecurityController extends Controller
      */
     public function loginAction()
     {
-        if ($this->getUser())
-        {
+        if ($this->getUser()) {
             $this->addFlash('error', 'You are already logged in');
             return $this->redirectToRoute('shop_index');
         }
@@ -30,14 +28,16 @@ class SecurityController extends Controller
     /**
      * @Route("logout", name="security_logout")
      */
-    public function logout() {
+    public function logout()
+    {
 
     }
 
     /**
      * @Route("editor", name="a")
      */
-    public function editor() {
+    public function editor()
+    {
 
     }
 
@@ -48,8 +48,7 @@ class SecurityController extends Controller
      */
     public function registerAction(Request $request)
     {
-        if ($this->getUser())
-        {
+        if ($this->getUser()) {
             return $this->redirectToRoute('security_login');
         }
 

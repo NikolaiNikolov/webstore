@@ -21,3 +21,6 @@ services:
     validate:
         class: WebstoreBundle\Service\ValidationService
         autowire: true
+    price_calculator:
+        class: WebstoreBundle\Service\PriceCalculator
+        arguments: ['@doctrine.orm.entity_manager']

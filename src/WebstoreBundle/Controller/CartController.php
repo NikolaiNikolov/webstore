@@ -5,16 +5,12 @@ namespace WebstoreBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use WebstoreBundle\Entity\Cart;
 use WebstoreBundle\Entity\Product;
 use WebstoreBundle\Entity\Transaction;
-use WebstoreBundle\Entity\User;
-use WebstoreBundle\Service\ValidationService;
 
 class CartController extends Controller
 {
@@ -28,13 +24,12 @@ class CartController extends Controller
     {
         $carts = $this->getDoctrine()->getRepository(Cart::class)
             ->findAllQuery($this->getUser()->getId());
-        $products = array_map(function($p){
+        $products = array_map(function ($p) {
             return $p->getProduct();
         }, $carts);
         $total = 0;
 
-        foreach ($carts as $cart)
-        {
+        foreach ($carts as $cart) {
             /** @var Cart $cartProduct */
             $cartProduct = $cart;
             $productPrice = $cartProduct->getProduct()->getPrice();
@@ -59,20 +54,17 @@ class CartController extends Controller
         $repo = $this->getDoctrine()->getRepository(Product::class);
         $product = $repo->find($id);
 
-        if (is_null($product))
-        {
+        if (is_null($product)) {
             $this->addFlash('error', "This product doesn't exist!");
             return $this->redirectToRoute('products_all');
         }
 
-        if ($product->getOwner() === $this->getUser())
-        {
+        if ($product->getOwner() === $this->getUser()) {
             $this->addFlash('error', "You already own this product!");
             return $this->redirectToRoute('products_all');
         }
 
-        if (!$product->isAvailable())
-        {
+        if (!$product->isAvailable()) {
             $this->addFlash('error', "This product is not for sale!");
             return $this->redirectToRoute('products_all');
         }
@@ -107,8 +99,7 @@ class CartController extends Controller
         $cartProduct = $this->getDoctrine()->getRepository(Cart::class)
             ->findOneBy(['product' => $id, 'user' => $this->getUser()]);
 
-        if (is_null($cartProduct))
-        {
+        if (is_null($cartProduct)) {
             return $this->redirectToRoute('user_cart');
         }
 
@@ -133,12 +124,10 @@ class CartController extends Controller
         $cartProduct = $repo->findOneBy(['product' => $id, 'user' => $this->getUser()]);
         $newQuantity = $request->request->get('quantity');
 
-        if (is_null($cartProduct))
-        {
+        if (is_null($cartProduct)) {
             return $this->redirectToRoute('user_cart');
         }
-        if ($newQuantity > 0)
-        {
+        if ($newQuantity > 0) {
             $cartProduct->setQuantity($newQuantity);
             $em = $this->getDoctrine()->getManager();
             $em->persist($cartProduct);
@@ -165,14 +154,14 @@ class CartController extends Controller
         foreach ($cart as $items) {
             $cartProduct = $items->getProduct();
             $requestedQuantity = $items->getQuantity();
-                        $repo = $this->getDoctrine()->getRepository(Product::class);
+            $repo = $this->getDoctrine()->getRepository(Product::class);
             $product = $repo->find($cartProduct);
             $requestedQuantity = $items->getQuantity();
             //initialize transaction
             $transaction = new Transaction($product, $this->getUser(), $em, $requestedQuantity);
 
 //            try {
-                $transaction->initTransaction();
+            $transaction->initTransaction();
 //            } catch (\Exception $exception) {
 //                $this->addFlash('error', $exception);
 //                return $this->redirectToRoute('user_cart');

@@ -4,9 +4,6 @@ namespace WebstoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\JoinTable;
-use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -54,45 +51,18 @@ class User implements UserInterface
      * @ORM\Column(name="lastName", type="string", length=255)
      */
     private $lastName;
-
-    /**
-     * @return float
-     */
-    public function getBalance(): float
-    {
-        return $this->balance;
-    }
-
-    /**
-     * @param float $balance
-     */
-    public function setBalance(float $balance)
-    {
-        $this->balance = $balance;
-    }
-
     /**
      * @var float
      *
      * @ORM\Column(name="balance", type="decimal", precision=10, scale=2)
      */
     private $balance = 100.00;
-
     /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="WebstoreBundle\Entity\Product", mappedBy="owner")
      */
     private $products;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getProducts(): ArrayCollection
-    {
-        return $this->products;
-    }
-
     /**
      * @var ArrayCollection
      *
@@ -103,6 +73,20 @@ class User implements UserInterface
      *     )
      */
     private $roles;
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+        $this->roles = new ArrayCollection();
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getProducts(): ArrayCollection
+    {
+        return $this->products;
+    }
 
     /**
      * Get id
@@ -115,27 +99,13 @@ class User implements UserInterface
     }
 
     /**
-     * Set username
-     *
-     * @param string $username
-     *
-     * @return User
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * Get username
+     * Get password
      *
      * @return string
      */
-    public function getUsername()
+    public function getPassword()
     {
-        return $this->username;
+        return $this->password;
     }
 
     /**
@@ -153,13 +123,13 @@ class User implements UserInterface
     }
 
     /**
-     * Get password
+     * Get firstName
      *
      * @return string
      */
-    public function getPassword()
+    public function getFirstName()
     {
-        return $this->password;
+        return $this->firstName;
     }
 
     /**
@@ -177,13 +147,13 @@ class User implements UserInterface
     }
 
     /**
-     * Get firstName
+     * Get lastName
      *
      * @return string
      */
-    public function getFirstName()
+    public function getLastName()
     {
-        return $this->firstName;
+        return $this->lastName;
     }
 
     /**
@@ -200,40 +170,25 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * Get lastName
-     *
-     * @return string
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
-    }
-
-    /**
-     * Returns the roles granted to the user.
-     *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return (Role|string)[] The user roles
-     */
-    public function getRoles()
-    {
-        return array_map(function (Role $role){return $role->getName();}, $this->roles->toArray());
-    }
-
     public function addMoney($money)
     {
         $this->setBalance($this->getBalance() + $money);
+    }
+
+    /**
+     * @return float
+     */
+    public function getBalance(): float
+    {
+        return $this->balance;
+    }
+
+    /**
+     * @param float $balance
+     */
+    public function setBalance(float $balance)
+    {
+        $this->balance = $balance;
     }
 
     public function takeMoney($money)
@@ -276,12 +231,6 @@ class User implements UserInterface
         // TODO: Implement eraseCredentials() method.
     }
 
-    public function __construct()
-    {
-        $this->products = new ArrayCollection();
-        $this->roles = new ArrayCollection();
-    }
-
     /**
      * @return bool
      */
@@ -291,11 +240,58 @@ class User implements UserInterface
     }
 
     /**
+     * Get username
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     *
+     * @return User
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function isAdmin()
     {
         return in_array("ROLE_ADMIN", $this->getRoles());
+    }
+
+    /**
+     * Returns the roles granted to the user.
+     *
+     * <code>
+     * public function getRoles()
+     * {
+     *     return array('ROLE_USER');
+     * }
+     * </code>
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     *
+     * @return (Role|string)[] The user roles
+     */
+    public function getRoles()
+    {
+        return array_map(function (Role $role) {
+            return $role->getName();
+        }, $this->roles->toArray());
     }
 
     /**

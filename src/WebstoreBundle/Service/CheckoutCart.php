@@ -1,4 +1,5 @@
 <?php
+
 namespace WebstoreBundle\Service;
 
 class CheckoutCart

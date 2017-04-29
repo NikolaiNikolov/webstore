@@ -13,13 +13,12 @@ class EditorProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('category',
-        null,
-        [
-            'placeholder' => 'Choose category',
-        ]
+            null,
+            [
+                'placeholder' => 'Choose category',
+            ]
         )
-            ->add('quantity', IntegerType::class)
-        ;
+            ->add('quantity', IntegerType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

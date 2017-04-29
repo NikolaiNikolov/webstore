@@ -35,8 +35,7 @@ class AdminController extends Controller
         $form->handleRequest($request);
         $form->getData();
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $uploadService = $this->get('picture_upload');
             $uploadService->uploadPicture($product, $oldPic);
 

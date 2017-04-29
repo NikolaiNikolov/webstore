@@ -1,8 +1,7 @@
 <?php
+
 namespace WebstoreBundle\Service;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\DependencyInjection\Dump\Container;
 use WebstoreBundle\Entity\Product;
 use WebstoreBundle\Entity\User;
 
@@ -14,8 +13,7 @@ class ValidationService
 
     public function checkIfOwner(Product $product, User $user)
     {
-        if ($product->getOwner() === $user)
-        {
+        if ($product->getOwner() === $user) {
             $this->controller->addFlash('error', "You already own this product!");
             return $this->redirectToRoute('products_all');
         }

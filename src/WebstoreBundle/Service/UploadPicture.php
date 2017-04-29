@@ -1,8 +1,8 @@
 <?php
+
 namespace WebstoreBundle\Service;
 
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Kernel;
 use WebstoreBundle\Entity\Product;
@@ -10,6 +10,11 @@ use WebstoreBundle\Entity\Product;
 class UploadPicture
 {
     protected $kernel;
+
+    public function __construct(Kernel $kernel)
+    {
+        $this->kernel = $kernel;
+    }
 
     public function uploadPicture(Product $product, $oldPic)
     {
@@ -24,16 +29,11 @@ class UploadPicture
                 . $currentDate->format('s'));
             $file->move(
                 $this->kernel->getRootDir() . $path,
-                $filename.'.png');
+                $filename . '.png');
             $product->setImage('images/products/' . $filename . '.png');
         } else {
             $product->setImage($oldPic);
         }
-    }
-
-    public function __construct(Kernel $kernel)
-    {
-        $this->kernel = $kernel;
     }
 
 }
