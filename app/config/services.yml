@@ -21,6 +21,9 @@ services:
     validate:
         class: WebstoreBundle\Service\ValidationService
         autowire: true
+    promotion_manager:
+        class: WebstoreBundle\Service\PromotionManager
+        arguments: ["@=service('doctrine.orm.default_entity_manager').getRepository('WebstoreBundle:Promotion')"]
     price_calculator:
         class: WebstoreBundle\Service\PriceCalculator
-        arguments: ['@doctrine.orm.entity_manager']
+        arguments: ['@promotion_manager']

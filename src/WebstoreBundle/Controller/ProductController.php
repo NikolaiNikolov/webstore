@@ -60,9 +60,7 @@ class ProductController extends Controller
         $sort = $sort->sort($request);
 
         $calc = $this->get('price_calculator');
-        $max_promotion = $this->getDoctrine()
-            ->getRepository(Promotion::class)
-            ->fetchBiggestPromotion();
+        $max_promotion = $this->get('promotion_manager')->getGeneralPromotion();
 
         $products = $paginator->paginate(
             $this->getDoctrine()->getRepository(Product::class)->findAllAvailableQuery()->orderBy($sort[0], $sort[1]),

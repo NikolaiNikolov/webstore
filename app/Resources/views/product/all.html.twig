@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
+
 {% block content %}
     <div class="container">
-        {{ max_promotion }}
         {% if selected is defined %}
             {{ selected }}
         {% endif %}
@@ -32,15 +32,14 @@
             </div>
 
             {% for product in products %}
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 product">
 
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 product">
+                    {% set product_promotion = calc.calculate(product) %}
                     <h3><a class="product-title" href="{{ path('product_view', {id: product.id}) }}" target="_blank">
                             <img class="product-image" src="{{ asset(product.image) }}" alt="{{ product.name }}">
                             {{ product.name }}</a>
                     </h3>
                     <div class="product-description">{{ product.summary }}</div>
-                    {% set product_promotion = calc.calculate(product) %}
-
                     {% if product_promotion != product.price %}
                         <strong>Price: </strong>
                         <del>${{ product.price }}</del>

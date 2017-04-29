@@ -1,62 +1,40 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Nikolai
- * Date: 4/29/2017
- * Time: 1:51 AM
- */
 
 namespace WebstoreBundle\Service;
 
-
 use Doctrine\ORM\EntityManager;
 use WebstoreBundle\Entity\Product;
-use WebstoreBundle\Entity\Promotion;
+use WebstoreBundle\Repository\PromotionRepository;
 
 class PriceCalculator
 {
-    /**
-     * @var EntityManager
-     */
-    protected $em;
-    protected $promotion;
-    protected $category_promotions = [];
+    /** @var  PromotionManager */
+    protected $manager;
 
-    /**
-     * PriceCalculator constructor.
-     * @param EntityManager $em
-     */
-    public function __construct(EntityManager $em)
-    {
-        $this->em = $em;
+    public function __construct(PromotionManager $manager) {
+        $this->manager= $manager;
     }
 
+
     /**
-     * @param float $price
+     * @param Product $product
+     *
      * @return float
      */
-    public function calculate(Product $product)
+    public function calculate($product)
     {
-        $category = $product->getCategory();
+        $category    = $product->getCategory();
+        $category_id = $category->getId();
 
-        if (!isset($this->category_promotions[$category->getId()])) {
-            $category_prom = $this->em
-                ->getRepository(Promotion::class)
-                ->fetchBiggestPromotion($category);
-
-            $this->category_promotions[$category->getId()] = $category_prom;
+        $promotion = $this->manager->getGeneralPromotion();
+        if($this->manager->hasCategoryPromotion($category)){
+            $promotion = $this->manager->getCategoryPromotion($category);
         }
 
-        $promotion = $this->category_promotions[$category->getId()];
-
-        if ($promotion === 0) {
-            $this->promotion = $promotion = $this->em
-                ->getRepository(Promotion::class)
-                ->fetchBiggestPromotion();
+        if(isset($this->category_promotions[$category_id])){
+            $promotion = $this->category_promotions[$category_id];
         }
-        
-        $price = $product->getPrice();
-        return $product->getPrice() - $price * ($this->promotion / 100);
+
+        return $product->getPrice() - $product->getPrice() * ($promotion / 100);
     }
-
 }
